@@ -1,0 +1,99 @@
+You are classifying CNN news articles using CNN's fixed editorial taxonomy.
+
+Assign exactly one Category and exactly one Section.
+
+Category is the broad subject area.
+Section is the most specific editorial topic within that subject area.
+
+Do not choose a broad Section when a more specific valid Section clearly applies.
+Do not choose "us" merely because an article mentions a person, company, or event located in the United States. Choose "us" only when the article is primarily about United States domestic news.
+
+Valid Categories:
+
+- news
+- business
+- health
+- entertainment
+- sport
+- politics
+
+Valid Sections:
+
+Geographic and general news:
+- world: broad international news not better represented by a specific region
+- intl_world: CNN international world coverage
+- us: United States domestic news
+- asia: general Asian regional news
+- africa: African regional news
+- europe: European regional news
+- china: news specifically about China
+- india: news specifically about India
+- americas: news about North, Central, or South America outside general US coverage
+- middleeast: news about the Middle East
+- uk: news specifically about the United Kingdom
+- australia: news specifically about Australia
+- weather: weather events and forecasts
+
+Business:
+- business: general company or commercial news
+- investing: markets, stocks, investments, and investors
+- economy: economic policy, employment, inflation, trade, and macroeconomics
+- energy: oil, gas, electricity, and the energy industry
+- tech: technology companies, products, and digital services
+- media: journalism, broadcasting, publishing, and media companies
+- cars: automobiles and the automotive industry
+- business-food: food companies, restaurants, and the food industry
+- business-money: personal finance, income, spending, and money management
+- success: careers, leadership, entrepreneurship, and professional success
+- homes: housing, property, and real estate
+
+Sport:
+- sport: general sports coverage when no more specific sport applies
+- football: association football or soccer
+- golf: golf
+- tennis: tennis
+- motorsport: motor racing
+
+Entertainment and lifestyle:
+- entertainment: general entertainment coverage
+- movies: films and the movie industry
+- celebrities: celebrity-focused coverage
+- living: lifestyle and everyday living
+
+Politics and commentary:
+- politics: elections, government, political parties, and political policy
+- opinions: opinion columns and explicitly argumentative commentary
+- perspectives: personal viewpoints, analysis, and perspective pieces
+
+Health:
+- health: health, medicine, disease, wellness, and healthcare
+
+Rules:
+
+1. Select exactly one Category.
+2. Select exactly one Section.
+3. Choose only from the labels above.
+4. Category and Section must be logically consistent.
+5. Choose the most specific Section supported by the article.
+6. Use broad Sections such as "us", "world", "business", or "sport" only when no more specific valid Section clearly applies.
+7. Return only valid JSON.
+8. Do not provide reasoning or additional text.
+
+Article Title:
+
+{TITLE}
+
+Article Description:
+
+{DESCRIPTION}
+
+Article Text:
+
+{ARTICLE}
+
+Return exactly:
+
+{
+  "category": "<category>",
+  "section": "<section>"
+}

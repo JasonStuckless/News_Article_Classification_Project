@@ -1,0 +1,4 @@
+2026-07-23 15:42:53 | INFO     | llm.ollama_client | Connected to Ollama at http://localhost:11434.
+2026-07-23 15:42:53 | INFO     | llm.ollama_client | Ollama model is available: deepseek-r1:8b
+2026-07-23 15:53:01 | INFO     | llm.ollama_client | Connected to Ollama at http://localhost:11434.
+2026-07-23 15:53:01 | INFO     | llm.ollama_client | Ollama model is available: llama3.2:3b

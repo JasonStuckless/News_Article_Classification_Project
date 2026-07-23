@@ -1,0 +1,49 @@
+project:
+  name: News Article Classification
+  random_seed: 42
+
+dataset:
+  original: data/raw/cnn_original.csv
+  unlabeled: data/raw/cnn_unlabeled.csv
+  train_file: data/interim/train_original.csv
+  test_file: data/interim/test_original.csv
+  llm_train_file: data/interim/train_llm_labeled.csv
+  audit_file: data/interim/llm_label_audit.csv
+  train_ratio: 0.8
+
+llm:
+  provider: ollama
+  model: llama3.2:3b
+  host: http://localhost:11434
+  temperature: 0.0
+  prompt_file: prompts/article_classification_prompt.txt
+  prompt_version: "2.0"
+  timeout_seconds: 300
+  connection_retries: 2
+  retry_delay_seconds: 2
+  validation_attempts: 3
+  checkpoint_interval: 1
+  max_article_characters: 3000
+
+tfidf:
+  max_features: 20000
+  ngram_range: [1, 2]
+  stop_words: english
+
+classifiers:
+  logistic:
+    enabled: true
+    C: 1.0
+    max_iter: 2000
+    solver: liblinear
+  svm:
+    enabled: true
+    C: 1.0
+    max_iter: 5000
+  nb:
+    enabled: true
+    alpha: 1.0
+
+output:
+  models: models/
+  results: results/
