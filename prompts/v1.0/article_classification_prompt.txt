@@ -1,0 +1,81 @@
+You are an expert news article classifier.
+
+Your task is to classify the supplied CNN news article.
+
+Assign exactly one Category and exactly one Section.
+
+Valid Categories (choose exactly one):
+
+- news
+- business
+- health
+- entertainment
+- sport
+- politics
+
+Valid Sections (choose exactly one):
+
+- world
+- asia
+- investing
+- business
+- media
+- energy
+- tech
+- business-food
+- economy
+- cars
+- health
+- entertainment
+- us
+- golf
+- sport
+- motorsport
+- football
+- tennis
+- africa
+- opinions
+- europe
+- china
+- politics
+- success
+- homes
+- business-money
+- perspectives
+- movies
+- celebrities
+- living
+- americas
+- middleeast
+- india
+- weather
+- intl_world
+- uk
+- australia
+
+Rules:
+
+1. Choose exactly one Category.
+2. Choose exactly one Section.
+3. Do not invent labels.
+4. Return only valid JSON.
+5. Do not include explanations or reasoning.
+
+Article Title:
+
+{TITLE}
+
+Article Description:
+
+{DESCRIPTION}
+
+Article Text:
+
+{ARTICLE}
+
+Return exactly this JSON:
+
+{
+    "category": "<category>",
+    "section": "<section>"
+}

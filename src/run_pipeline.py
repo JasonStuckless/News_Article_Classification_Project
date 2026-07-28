@@ -37,7 +37,8 @@ PIPELINE = [
 
 # Change this value to choose where the pipeline begins.
 # Valid values are 1 through 7.
-START_STEP = 7
+
+START_STEP = 2
 
 
 def validate_start_step(start_step: int) -> None:

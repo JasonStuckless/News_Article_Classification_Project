@@ -1,14 +1,20 @@
-You are classifying CNN news articles using CNN's fixed editorial taxonomy.
+You are an expert editor familiar with how CNN organizes news articles on its website.
+
+Your task is to predict the labels that CNN editors would most likely assign to this article.
+
+IMPORTANT:
+
+You are NOT classifying the article by its general topic.
+
+Instead, predict the editorial labels that CNN would use if this article appeared on CNN.com.
+
+The Section labels represent CNN website sections, which may be more specific than the article topic.
 
 Assign exactly one Category and exactly one Section.
 
-Category is the broad subject area.
-Section is the most specific editorial topic within that subject area.
-
-Do not choose a broad Section when a more specific valid Section clearly applies.
-Do not choose "us" merely because an article mentions a person, company, or event located in the United States. Choose "us" only when the article is primarily about United States domestic news.
-
-Valid Categories:
+==================================================
+VALID CATEGORIES
+==================================================
 
 - news
 - business
@@ -17,83 +23,206 @@ Valid Categories:
 - sport
 - politics
 
-Valid Sections:
+==================================================
+VALID SECTIONS
+==================================================
 
-Geographic and general news:
-- world: broad international news not better represented by a specific region
-- intl_world: CNN international world coverage
-- us: United States domestic news
-- asia: general Asian regional news
-- africa: African regional news
-- europe: European regional news
-- china: news specifically about China
-- india: news specifically about India
-- americas: news about North, Central, or South America outside general US coverage
-- middleeast: news about the Middle East
-- uk: news specifically about the United Kingdom
-- australia: news specifically about Australia
-- weather: weather events and forecasts
+- world
+- asia
+- investing
+- business
+- media
+- energy
+- tech
+- business-food
+- economy
+- cars
+- health
+- entertainment
+- us
+- golf
+- sport
+- motorsport
+- football
+- tennis
+- africa
+- opinions
+- europe
+- china
+- politics
+- success
+- homes
+- business-money
+- perspectives
+- movies
+- celebrities
+- living
+- americas
+- middleeast
+- india
+- weather
+- intl_world
+- uk
+- australia
 
-Business:
-- business: general company or commercial news
-- investing: markets, stocks, investments, and investors
-- economy: economic policy, employment, inflation, trade, and macroeconomics
-- energy: oil, gas, electricity, and the energy industry
-- tech: technology companies, products, and digital services
-- media: journalism, broadcasting, publishing, and media companies
-- cars: automobiles and the automotive industry
-- business-food: food companies, restaurants, and the food industry
-- business-money: personal finance, income, spending, and money management
-- success: careers, leadership, entrepreneurship, and professional success
-- homes: housing, property, and real estate
+==================================================
+HOW TO CHOOSE A CATEGORY
+==================================================
 
-Sport:
-- sport: general sports coverage when no more specific sport applies
-- football: association football or soccer
-- golf: golf
-- tennis: tennis
-- motorsport: motor racing
+Choose the broad topic of the article.
 
-Entertainment and lifestyle:
-- entertainment: general entertainment coverage
-- movies: films and the movie industry
-- celebrities: celebrity-focused coverage
-- living: lifestyle and everyday living
+Examples:
 
-Politics and commentary:
-- politics: elections, government, political parties, and political policy
-- opinions: opinion columns and explicitly argumentative commentary
-- perspectives: personal viewpoints, analysis, and perspective pieces
+Football match -> sport
 
-Health:
-- health: health, medicine, disease, wellness, and healthcare
+Company earnings -> business
 
-Rules:
+Election -> politics
 
-1. Select exactly one Category.
-2. Select exactly one Section.
-3. Choose only from the labels above.
-4. Category and Section must be logically consistent.
-5. Choose the most specific Section supported by the article.
-6. Use broad Sections such as "us", "world", "business", or "sport" only when no more specific valid Section clearly applies.
-7. Return only valid JSON.
-8. Do not provide reasoning or additional text.
+Disease outbreak -> health
 
-Article Title:
+Movie release -> entertainment
+
+General current events -> news
+
+==================================================
+HOW TO CHOOSE A SECTION
+==================================================
+
+Choose the CNN website section where this article would most likely appear.
+
+Prefer the MOST SPECIFIC section that accurately matches the article.
+
+Examples:
+
+French election
+Category: news
+Section: europe
+
+UK election
+Category: news
+Section: uk
+
+Australian wildfire
+Category: news
+Section: australia
+
+Chinese economy
+Category: business
+Section: china
+
+India technology industry
+Category: business
+Section: india
+
+Middle East conflict
+Category: news
+Section: middleeast
+
+Global diplomatic summit
+Category: news
+Section: world
+
+International story without a dominant region
+Category: news
+Section: intl_world
+
+Stock market analysis
+Category: business
+Section: investing
+
+Corporate earnings
+Category: business
+Section: business-money
+
+Oil prices
+Category: business
+Section: energy
+
+Electric vehicles
+Category: business
+Section: cars
+
+Artificial intelligence
+Category: business
+Section: tech
+
+Premier League match
+Category: sport
+Section: football
+
+Wimbledon
+Category: sport
+Section: tennis
+
+PGA Tour
+Category: sport
+Section: golf
+
+Formula One
+Category: sport
+Section: motorsport
+
+General sports news
+Category: sport
+Section: sport
+
+Movie review
+Category: entertainment
+Section: movies
+
+Celebrity interview
+Category: entertainment
+Section: celebrities
+
+Editorial or opinion piece
+Category: news
+Section: opinions
+
+Lifestyle article
+Category: news
+Section: living
+
+==================================================
+IMPORTANT RULES
+==================================================
+
+DO NOT choose "us" simply because the article is written in English.
+
+Choose "us" ONLY if the article is primarily about the United States.
+
+If another regional section is more appropriate (europe, uk, china, india, africa, australia, middleeast, americas, asia), use that instead.
+
+When multiple sections seem possible, choose the one that is MOST SPECIFIC.
+
+==================================================
+FINAL CHECK
+==================================================
+
+Before answering, verify that:
+
+- Exactly one valid Category is selected.
+- Exactly one valid Section is selected.
+- The Section is the most specific appropriate choice.
+- "us" is used only for articles primarily about the United States.
+
+==================================================
+ARTICLE TITLE
 
 {TITLE}
 
-Article Description:
+ARTICLE DESCRIPTION
 
 {DESCRIPTION}
 
-Article Text:
+ARTICLE TEXT
 
 {ARTICLE}
 
-Return exactly:
+==================================================
+Return ONLY valid JSON.
 
 {
-  "category": "<category>",
-  "section": "<section>"
+    "category": "<category>",
+    "section": "<section>"
 }

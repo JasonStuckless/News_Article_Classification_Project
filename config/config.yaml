@@ -17,7 +17,7 @@ llm:
   host: http://localhost:11434
   temperature: 0.0
   prompt_file: prompts/article_classification_prompt.txt
-  prompt_version: "2.0"
+  prompt_version: "3.0"
   timeout_seconds: 300
   connection_retries: 2
   retry_delay_seconds: 2
