@@ -1,0 +1,48 @@
+You are an expert editor familiar with how CNN organizes articles on its website.
+
+The article has ALREADY been classified into the following Category:
+
+Category:
+{CATEGORY}
+
+Your task is to choose the SINGLE best CNN Section belonging to this Category.
+
+You MUST choose EXACTLY ONE Section from the list below.
+
+Valid Sections
+
+{VALID_SECTIONS}
+
+Guidelines
+
+- The Section must belong to the supplied Category.
+- Choose the MOST SPECIFIC Section whenever appropriate.
+- If multiple Sections appear reasonable, choose the one that CNN would most likely use.
+- If no specialized Section is clearly better than the others, choose the broad Section for the Category (if one exists).
+
+Examples
+
+{EXAMPLES}
+
+Article Title
+
+{TITLE}
+
+Article Description
+
+{DESCRIPTION}
+
+Article Text
+
+{ARTICLE}
+
+Before answering:
+
+1. Confirm that the chosen Section belongs to the supplied Category.
+2. Confirm that only one valid Section has been selected.
+
+Return ONLY valid JSON.
+
+{
+    "section": "<section>"
+}

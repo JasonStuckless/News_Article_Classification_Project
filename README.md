@@ -1,111 +1,197 @@
-# CNN News Article Classification Using LLM-Assisted Labels
+# CNN News Article Classification Using Hierarchical LLM-Assisted Labels
 
 **Course:** ENGR 5775: Data Mining and Knowledge Discovery  
 **Professor:** Dr. Masoud Makrehchi  
 **Group:** Group 1  
 
-**Group Members**
+## Group Members
+
 - Jason Stuckless
 - Paria Sarzaeim
 
 ---
 
-## Project Overview
+# Project Overview
 
-This project investigates the use of a Large Language Model (LLM) to generate labels for a news article classification task and compares its effectiveness against using the original human-assigned labels.
+This project investigates whether a locally hosted Large Language Model (LLM) can generate high-quality labels suitable for supervised news article classification.
 
-The project uses the **CNN News Articles** dataset and predicts two target variables:
+Unlike a traditional flat classification approach, the project uses **hierarchical LLM-assisted labeling**. The LLM first predicts a broad **Category** for each article and then predicts a **Section** constrained by that Category. The resulting labels are used to train multiple machine learning classifiers and are compared with classifiers trained using the original human-generated CNN labels.
 
-- **Category**
-- **Section**
-
-The primary objective is to determine how classifier performance changes when trained using LLM-generated labels instead of the original dataset labels.
+The project evaluates whether LLM-generated labels can serve as a practical substitute for manually annotated training data.
 
 ---
 
-## Objectives
+# Objectives
 
-The project consists of four primary stages:
+The project consists of four primary stages.
 
 1. Prepare and split the CNN dataset into training and testing sets.
-2. Use a local LLM (via Ollama) to generate Category and Section labels for every article in the training dataset.
-3. Train multiple machine learning classifiers using both:
+2. Generate hierarchical Category and Section labels using a locally hosted LLM.
+3. Train machine learning classifiers using both:
    - Original CNN labels
    - LLM-generated labels
-4. Compare the resulting models using standard classification metrics.
+4. Compare classifier performance using standard evaluation metrics.
 
 ---
 
-## Dataset
+# Dataset
 
 The project uses the CNN News Articles dataset.
 
-The original dataset contains human-assigned labels for:
+Each article contains two target labels:
 
 - Category
 - Section
 
-These labels serve as the ground truth for evaluating both the LLM-generated labels and the trained classifiers.
+The original labels are treated as ground truth throughout the project.
 
 ---
 
-## LLM-Assisted Labeling
+# Hierarchical Labeling Strategy
 
-A locally hosted LLM is used to generate labels for each training article.
+The original CNN dataset follows a hierarchical structure.
 
-The model is instructed to:
+```
+Category
+│
+├── business
+│   ├── business
+│   ├── business-food
+│   ├── business-money
+│   ├── cars
+│   ├── economy
+│   ├── energy
+│   ├── homes
+│   ├── investing
+│   ├── media
+│   ├── perspectives
+│   ├── success
+│   └── tech
+│
+├── entertainment
+│   ├── entertainment
+│   ├── celebrities
+│   └── movies
+│
+├── health
+│   └── health
+│
+├── news
+│   ├── africa
+│   ├── americas
+│   ├── asia
+│   ├── australia
+│   ├── china
+│   ├── europe
+│   ├── india
+│   ├── intl_world
+│   ├── living
+│   ├── middleeast
+│   ├── opinions
+│   ├── uk
+│   ├── us
+│   ├── weather
+│   └── world
+│
+├── politics
+│   └── politics
+│
+└── sport
+    ├── sport
+    ├── football
+    ├── golf
+    ├── motorsport
+    └── tennis
+```
 
-- predict exactly one Category
-- predict exactly one Section
-- return only valid JSON
-- choose labels exclusively from the predefined label lists
-
-The generated labels are stored separately from the original dataset to preserve the original ground truth.
+The hierarchy is automatically extracted from the original training dataset and is used to constrain LLM predictions.
 
 ---
 
-## Machine Learning Models
+# LLM-Assisted Label Generation
 
-Three classical text classification models are trained.
+Label generation is performed in two stages.
+
+## Stage 1 – Category Prediction
+
+The LLM predicts exactly one Category from:
+
+- news
+- business
+- health
+- entertainment
+- sport
+- politics
+
+## Stage 2 – Section Prediction
+
+Once the Category has been selected, the LLM predicts a Section belonging only to that Category.
+
+For example, if the predicted Category is **sport**, the available Sections are limited to:
+
+- sport
+- football
+- golf
+- motorsport
+- tennis
+
+This hierarchical approach reduces the search space, prevents invalid Category–Section combinations, and more closely mirrors the editorial structure of the original CNN dataset.
+
+---
+
+# Machine Learning Models
+
+Three classical machine learning classifiers are trained.
 
 - Logistic Regression
 - Linear Support Vector Machine (Linear SVM)
 - Multinomial Naive Bayes
 
-Each classifier is trained twice:
+Each classifier is trained twice.
 
-1. Using the original dataset labels.
-2. Using the LLM-generated labels.
+### Experiment 1
 
-This produces a total of twelve trained models.
+Training labels:
+
+- Original CNN labels
+
+### Experiment 2
+
+Training labels:
+
+- Hierarchically generated LLM labels
+
+All models are evaluated using the same original testing dataset.
 
 ---
 
-## Feature Extraction
+# Feature Extraction
 
-Articles are converted into numerical feature vectors using TF-IDF vectorization.
+Article text is converted into numerical feature vectors using TF-IDF vectorization.
 
-The same vectorizer is used for both experiments to ensure that the only experimental difference is the source of the labels.
+The same TF-IDF vectorizer is used for both experiments. Only the source of the training labels changes, ensuring a fair comparison between original and LLM-generated labels.
 
 ---
 
-## Evaluation
+# Evaluation
 
-All models are evaluated using the original testing dataset.
-
-The following metrics are reported:
+Classifier performance is evaluated using:
 
 - Accuracy
 - Precision
 - Recall
-- F1-score
+- Macro F1-score
+- Weighted F1-score
 - Confusion Matrices
 
-The project also measures the agreement between the original labels and the LLM-generated labels.
+The project also evaluates the agreement between:
+
+- Original and LLM-generated Categories
+- Original and LLM-generated Sections
 
 ---
 
-## Project Structure
+# Project Structure
 
 ```
 CNN_Project/
@@ -125,7 +211,8 @@ CNN_Project/
 │   └── section/
 │
 ├── prompts/
-│   └── article_classification_prompt.txt
+│   ├── category_classification_prompt.txt
+│   └── section_classification_prompt.txt
 │
 ├── results/
 │   ├── confusion_matrices/
@@ -144,12 +231,10 @@ CNN_Project/
 │   ├── 07_generate_figures.py
 │   │
 │   ├── llm/
-│   │   ├── __init__.py
 │   │   ├── ollama_client.py
 │   │   └── validate_labels.py
 │   │
 │   └── utils/
-│       ├── __init__.py
 │       ├── io.py
 │       └── logging.py
 │
@@ -160,19 +245,19 @@ CNN_Project/
 
 ---
 
-## Pipeline
+# Pipeline
 
-The project follows a seven-stage pipeline.
+The complete project consists of seven stages.
 
 1. Prepare the dataset.
-2. Generate LLM-assisted labels.
-3. Validate all generated datasets.
-4. Vectorize the articles using TF-IDF.
+2. Generate hierarchical LLM labels.
+3. Validate all datasets and hierarchical label pairs.
+4. Vectorize article text using TF-IDF.
 5. Train the classification models.
-6. Evaluate model performance.
+6. Evaluate classifier performance.
 7. Generate figures and summary tables.
 
-The complete pipeline can be executed using:
+Run the complete pipeline using:
 
 ```bash
 python src/run_pipeline.py
@@ -182,19 +267,13 @@ Alternatively, each stage may be executed independently.
 
 ---
 
-## Software Requirements
+# Software Requirements
 
 - Python 3.11
 - Ollama
-- Local LLM (configured in `config/config.yaml`)
+- Llama 3.2 (3B) or another compatible Ollama model
 
-Python dependencies are listed in:
-
-```
-requirements.txt
-```
-
-Install them using:
+Install the required Python packages using:
 
 ```bash
 pip install -r requirements.txt
@@ -202,43 +281,56 @@ pip install -r requirements.txt
 
 ---
 
-## Experimental Design
+# Experimental Design
 
-The project compares two training conditions.
+The project compares two supervised learning conditions.
 
-### Experiment 1
+## Experiment 1
 
-Training labels:
-
-- Original CNN labels
-
-Testing labels:
+Training Labels
 
 - Original CNN labels
 
-### Experiment 2
-
-Training labels:
-
-- LLM-generated labels
-
-Testing labels:
+Testing Labels
 
 - Original CNN labels
 
-Using the same testing dataset for both experiments ensures that the comparison isolates the effect of replacing the training labels with LLM-generated labels.
+## Experiment 2
+
+Training Labels
+
+- Hierarchically generated LLM labels
+
+Testing Labels
+
+- Original CNN labels
+
+Using the same testing dataset for both experiments ensures that classifier performance differences are attributable only to the source of the training labels.
 
 ---
 
-## Outputs
+# Outputs
 
 The project automatically generates:
 
-- LLM-labeled training dataset
-- Validation reports
+- Hierarchically LLM-labeled training dataset
+- Hierarchical labeling audit
 - TF-IDF feature matrices
-- Trained classification models
+- Trained machine learning models
 - Evaluation metrics
 - Confusion matrices
 - Performance comparison figures
 - Summary tables
+
+---
+
+# Future Work
+
+Potential future improvements include:
+
+- Improving prompt engineering for hierarchical label generation.
+- Investigating larger LLMs for label generation.
+- Exploring transformer-based classifiers (e.g., BERT) for semantic text classification.
+- Comparing additional machine learning classifiers.
+- Hyperparameter optimization for all classification models.
+- Evaluating alternative hierarchical prompting strategies.

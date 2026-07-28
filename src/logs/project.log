@@ -10,3 +10,7 @@
 2026-07-28 13:55:45 | INFO     | llm.ollama_client | Ollama model is available: llama3.2:3b
 2026-07-28 13:56:43 | INFO     | llm.ollama_client | Connected to Ollama at http://localhost:11434.
 2026-07-28 13:56:43 | INFO     | llm.ollama_client | Ollama model is available: llama3.2:3b
+2026-07-28 16:20:21 | INFO     | llm.ollama_client | Connected to Ollama at http://localhost:11434.
+2026-07-28 16:20:22 | INFO     | llm.ollama_client | Ollama model is available: llama3.2:3b
+2026-07-28 17:42:47 | WARNING  | llm.ollama_client | Ollama request failed on attempt 1 of 3: an error was encountered while running the model: CUDA error: out of memory
+2026-07-28 17:42:47 | INFO     | llm.ollama_client | Retrying Ollama request in 2.0 seconds.

@@ -16,12 +16,18 @@ llm:
   model: llama3.2:3b
   host: http://localhost:11434
   temperature: 0.0
-  prompt_file: prompts/article_classification_prompt.txt
-  prompt_version: "3.0"
+
+  category_prompt_file: prompts/category_classification_prompt.txt
+  section_prompt_file: prompts/section_classification_prompt.txt
+  prompt_version: "4.0"
+
   timeout_seconds: 300
   connection_retries: 2
   retry_delay_seconds: 2
-  validation_attempts: 3
+
+  category_validation_attempts: 3
+  section_validation_attempts: 3
+
   checkpoint_interval: 1
   max_article_characters: 3000
 
@@ -36,10 +42,12 @@ classifiers:
     C: 1.0
     max_iter: 2000
     solver: liblinear
+
   svm:
     enabled: true
     C: 1.0
     max_iter: 5000
+
   nb:
     enabled: true
     alpha: 1.0

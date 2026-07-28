@@ -1,0 +1,228 @@
+You are an expert editor familiar with how CNN organizes news articles on its website.
+
+Your task is to predict the labels that CNN editors would most likely assign to this article.
+
+IMPORTANT:
+
+You are NOT classifying the article by its general topic.
+
+Instead, predict the editorial labels that CNN would use if this article appeared on CNN.com.
+
+The Section labels represent CNN website sections, which may be more specific than the article topic.
+
+Assign exactly one Category and exactly one Section.
+
+==================================================
+VALID CATEGORIES
+==================================================
+
+- news
+- business
+- health
+- entertainment
+- sport
+- politics
+
+==================================================
+VALID SECTIONS
+==================================================
+
+- world
+- asia
+- investing
+- business
+- media
+- energy
+- tech
+- business-food
+- economy
+- cars
+- health
+- entertainment
+- us
+- golf
+- sport
+- motorsport
+- football
+- tennis
+- africa
+- opinions
+- europe
+- china
+- politics
+- success
+- homes
+- business-money
+- perspectives
+- movies
+- celebrities
+- living
+- americas
+- middleeast
+- india
+- weather
+- intl_world
+- uk
+- australia
+
+==================================================
+HOW TO CHOOSE A CATEGORY
+==================================================
+
+Choose the broad topic of the article.
+
+Examples:
+
+Football match -> sport
+
+Company earnings -> business
+
+Election -> politics
+
+Disease outbreak -> health
+
+Movie release -> entertainment
+
+General current events -> news
+
+==================================================
+HOW TO CHOOSE A SECTION
+==================================================
+
+Choose the CNN website section where this article would most likely appear.
+
+Prefer the MOST SPECIFIC section that accurately matches the article.
+
+Examples:
+
+French election
+Category: news
+Section: europe
+
+UK election
+Category: news
+Section: uk
+
+Australian wildfire
+Category: news
+Section: australia
+
+Chinese economy
+Category: business
+Section: china
+
+India technology industry
+Category: business
+Section: india
+
+Middle East conflict
+Category: news
+Section: middleeast
+
+Global diplomatic summit
+Category: news
+Section: world
+
+International story without a dominant region
+Category: news
+Section: intl_world
+
+Stock market analysis
+Category: business
+Section: investing
+
+Corporate earnings
+Category: business
+Section: business-money
+
+Oil prices
+Category: business
+Section: energy
+
+Electric vehicles
+Category: business
+Section: cars
+
+Artificial intelligence
+Category: business
+Section: tech
+
+Premier League match
+Category: sport
+Section: football
+
+Wimbledon
+Category: sport
+Section: tennis
+
+PGA Tour
+Category: sport
+Section: golf
+
+Formula One
+Category: sport
+Section: motorsport
+
+General sports news
+Category: sport
+Section: sport
+
+Movie review
+Category: entertainment
+Section: movies
+
+Celebrity interview
+Category: entertainment
+Section: celebrities
+
+Editorial or opinion piece
+Category: news
+Section: opinions
+
+Lifestyle article
+Category: news
+Section: living
+
+==================================================
+IMPORTANT RULES
+==================================================
+
+DO NOT choose "us" simply because the article is written in English.
+
+Choose "us" ONLY if the article is primarily about the United States.
+
+If another regional section is more appropriate (europe, uk, china, india, africa, australia, middleeast, americas, asia), use that instead.
+
+When multiple sections seem possible, choose the one that is MOST SPECIFIC.
+
+==================================================
+FINAL CHECK
+==================================================
+
+Before answering, verify that:
+
+- Exactly one valid Category is selected.
+- Exactly one valid Section is selected.
+- The Section is the most specific appropriate choice.
+- "us" is used only for articles primarily about the United States.
+
+==================================================
+ARTICLE TITLE
+
+{TITLE}
+
+ARTICLE DESCRIPTION
+
+{DESCRIPTION}
+
+ARTICLE TEXT
+
+{ARTICLE}
+
+==================================================
+Return ONLY valid JSON.
+
+{
+    "category": "<category>",
+    "section": "<section>"
+}

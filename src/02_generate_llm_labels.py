@@ -1,25 +1,23 @@
 """
 02_generate_llm_labels.py
 
-Generate LLM-assisted Category and Section labels for the CNN training set.
+Generate hierarchical LLM-assisted Category and Section labels for the CNN
+training set.
 
-This script:
-1. Loads project settings from config/config.yaml.
-2. Loads the original-label training dataset.
-3. Loads the classification prompt.
-4. Removes the real labels from each article before prompting the LLM.
-5. Uses the configured Ollama model to generate Category and Section labels.
-6. Validates every generated response.
-7. Retries invalid responses.
-8. Saves progress periodically so interrupted runs can resume.
-9. Creates:
-   - data/interim/train_llm_labeled.csv
-   - data/interim/llm_label_audit.csv
+For each article, the script performs two constrained LLM requests:
 
-The LLM-labeled training file uses the same structure as train_original.csv,
-but its Category and Section columns contain the LLM-generated labels.
+1. Predict one broad CNN Category.
+2. Predict one Section only from the Sections belonging to that Category.
 
-The audit file retains both the original and generated labels for analysis.
+The final Category-Section pair is validated against the dataset-derived CNN
+hierarchy before it is saved.
+
+Outputs:
+- data/interim/train_llm_labeled.csv
+- data/interim/llm_label_audit.csv
+
+The LLM-labeled training file preserves every non-label value from
+train_original.csv. Only Category and Section are replaced.
 """
 
 from __future__ import annotations
@@ -28,7 +26,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 import sys
 import time
-from typing import Any
+from typing import Any, Callable, TypeVar
 
 import pandas as pd
 import yaml
@@ -52,9 +50,15 @@ from llm.ollama_client import (
 )
 from llm.validate_labels import (
     LabelValidationError,
+    ValidatedCategory,
     ValidatedLabels,
-    get_label_response_schema,
-    parse_label_response,
+    ValidatedSection,
+    format_valid_sections,
+    get_category_response_schema,
+    get_section_response_schema,
+    parse_category_response,
+    parse_section_response,
+    validate_label_pair,
 )
 from utils.io import read_csv, write_csv
 from utils.logging import get_logger
@@ -96,19 +100,78 @@ AUDIT_COLUMNS: tuple[str, ...] = (
     "llm_section",
     "llm_model",
     "prompt_version",
-    "raw_response",
+    "raw_category_response",
+    "raw_section_response",
     "status",
-    "validation_error",
-    "request_attempts",
-    "processing_time_seconds",
-    "prompt_token_count",
-    "response_token_count",
+    "category_validation_error",
+    "section_validation_error",
+    "category_request_attempts",
+    "section_request_attempts",
+    "category_processing_time_seconds",
+    "section_processing_time_seconds",
+    "total_processing_time_seconds",
+    "category_prompt_token_count",
+    "category_response_token_count",
+    "section_prompt_token_count",
+    "section_response_token_count",
     "generated_at_utc",
 )
 
 
+SECTION_EXAMPLES: dict[str, str] = {
+    "business": """Examples of distinctions within the business Category:\n\n"
+    "- Stock-market or investment analysis -> investing\n"
+    "- Company or general commercial reporting -> business\n"
+    "- Inflation, jobs, trade, or macroeconomic policy -> economy\n"
+    "- Oil, gas, electricity, or energy companies -> energy\n"
+    "- Technology companies, products, or digital services -> tech\n"
+    "- Automobile companies or vehicles -> cars\n"
+    "- Food companies, restaurants, or the food industry -> business-food\n"
+    "- Personal finance, spending, income, or money management -> business-money\n"
+    "- Journalism, broadcasting, publishing, or media companies -> media\n"
+    "- Housing or real estate -> homes\n"
+    "- Careers, leadership, entrepreneurship, or professional success -> success\n"
+    "- First-person business analysis or viewpoint pieces -> perspectives""",
+    "entertainment": """Examples of distinctions within the entertainment Category:\n\n"
+    "- General entertainment-industry reporting -> entertainment\n"
+    "- Film releases, reviews, or the movie industry -> movies\n"
+    "- Celebrity-focused reporting or interviews -> celebrities""",
+    "health": """The only valid Section for the health Category is health.""",
+    "news": """Examples of distinctions within the news Category:\n\n"
+    "- United States domestic reporting -> us\n"
+    "- United Kingdom reporting -> uk\n"
+    "- European reporting outside the UK -> europe\n"
+    "- African regional reporting -> africa\n"
+    "- Asian regional reporting without a more specific country label -> asia\n"
+    "- China-specific reporting -> china\n"
+    "- India-specific reporting -> india\n"
+    "- Australian reporting -> australia\n"
+    "- Middle East reporting -> middleeast\n"
+    "- North, Central, or South American reporting outside the US -> americas\n"
+    "- Broad international reporting without one dominant region -> world\n"
+    "- CNN international-world editorial coverage -> intl_world\n"
+    "- Weather events or forecasts -> weather\n"
+    "- Opinion columns or explicit editorial argument -> opinions\n"
+    "- Lifestyle and everyday-living reporting -> living""",
+    "politics": """The only valid Section for the politics Category is politics.""",
+    "sport": """Examples of distinctions within the sport Category:\n\n"
+    "- Association football or soccer -> football\n"
+    "- Golf -> golf\n"
+    "- Motor racing -> motorsport\n"
+    "- Tennis -> tennis\n"
+    "- General sports reporting without a more specific listed sport -> sport""",
+}
+
+
 class LLMLabelGenerationError(RuntimeError):
-    """Raised when the LLM-labeling pipeline cannot continue safely."""
+    """Raised when the hierarchical labeling pipeline cannot continue."""
+
+
+TValidated = TypeVar(
+    "TValidated",
+    ValidatedCategory,
+    ValidatedSection,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -116,24 +179,7 @@ class LLMLabelGenerationError(RuntimeError):
 # ---------------------------------------------------------------------------
 
 def load_config(config_path: Path) -> dict[str, Any]:
-    """
-    Load and validate the project configuration.
-
-    Parameters
-    ----------
-    config_path:
-        Path to config/config.yaml.
-
-    Returns
-    -------
-    dict[str, Any]
-        Parsed configuration dictionary.
-
-    Raises
-    ------
-    LLMLabelGenerationError
-        If the configuration is missing or malformed.
-    """
+    """Load and validate config/config.yaml."""
     if not config_path.exists():
         raise LLMLabelGenerationError(
             f"Configuration file not found: {config_path}"
@@ -175,13 +221,13 @@ def load_config(config_path: Path) -> dict[str, Any]:
     required_llm_settings = {
         "model",
         "temperature",
-        "prompt_file",
+        "category_prompt_file",
+        "section_prompt_file",
     }
 
     missing_dataset_settings = (
         required_dataset_settings - set(dataset_config)
     )
-
     missing_llm_settings = required_llm_settings - set(llm_config)
 
     if missing_dataset_settings:
@@ -214,14 +260,7 @@ def resolve_project_path(configured_path: str) -> Path:
 # ---------------------------------------------------------------------------
 
 def validate_training_dataset(dataframe: pd.DataFrame) -> None:
-    """
-    Validate the original-label training dataset.
-
-    Raises
-    ------
-    LLMLabelGenerationError
-        If required columns or identifiers are invalid.
-    """
+    """Validate the original-label training dataset."""
     if dataframe.empty:
         raise LLMLabelGenerationError(
             "The training dataset contains no rows."
@@ -252,27 +291,18 @@ def validate_training_dataset(dataframe: pd.DataFrame) -> None:
             )
 
 
-def load_prompt(prompt_path: Path) -> str:
-    """
-    Load the article-classification prompt template.
-
-    The prompt must contain:
-    - {TITLE}
-    - {DESCRIPTION}
-    - {ARTICLE}
-    """
+def load_prompt(
+    prompt_path: Path,
+    required_placeholders: tuple[str, ...],
+    prompt_name: str,
+) -> str:
+    """Load one prompt template and validate its placeholders."""
     if not prompt_path.exists():
         raise LLMLabelGenerationError(
-            f"Prompt file not found: {prompt_path}"
+            f"{prompt_name} prompt file not found: {prompt_path}"
         )
 
     prompt_template = prompt_path.read_text(encoding="utf-8")
-
-    required_placeholders = (
-        "{TITLE}",
-        "{DESCRIPTION}",
-        "{ARTICLE}",
-    )
 
     missing_placeholders = [
         placeholder
@@ -283,7 +313,7 @@ def load_prompt(prompt_path: Path) -> str:
     if missing_placeholders:
         missing = ", ".join(missing_placeholders)
         raise LLMLabelGenerationError(
-            f"The prompt file is missing placeholders: {missing}"
+            f"The {prompt_name} prompt is missing placeholders: {missing}"
         )
 
     return prompt_template
@@ -294,11 +324,7 @@ def load_prompt(prompt_path: Path) -> str:
 # ---------------------------------------------------------------------------
 
 def clean_text(value: Any) -> str:
-    """
-    Convert a dataset value into safe prompt text.
-
-    Missing values become an empty string.
-    """
+    """Convert a dataset value into safe prompt text."""
     if pd.isna(value):
         return ""
 
@@ -306,11 +332,7 @@ def clean_text(value: Any) -> str:
 
 
 def truncate_text(text: str, maximum_characters: int | None) -> str:
-    """
-    Truncate text to a fixed number of characters.
-
-    A value of None means no truncation.
-    """
+    """Truncate text to a fixed number of characters."""
     if maximum_characters is None:
         return text
 
@@ -325,28 +347,62 @@ def truncate_text(text: str, maximum_characters: int | None) -> str:
     return text[:maximum_characters].rstrip()
 
 
-def build_prompt(
+def get_article_prompt_values(
+    row: pd.Series,
+    maximum_article_characters: int | None,
+) -> tuple[str, str, str]:
+    """Return cleaned title, description, and truncated article text."""
+    title = clean_text(row[TITLE_COLUMN])
+    description = clean_text(row[DESCRIPTION_COLUMN])
+    article = truncate_text(
+        clean_text(row[ARTICLE_COLUMN]),
+        maximum_characters=maximum_article_characters,
+    )
+
+    return title, description, article
+
+
+def build_category_prompt(
     prompt_template: str,
     row: pd.Series,
     maximum_article_characters: int | None,
 ) -> str:
-    """
-    Build the prompt for one article.
-
-    String replacement is used instead of str.format() because the prompt
-    contains literal JSON braces.
-    """
-    title = clean_text(row[TITLE_COLUMN])
-    description = clean_text(row[DESCRIPTION_COLUMN])
-    article = clean_text(row[ARTICLE_COLUMN])
-
-    article = truncate_text(
-        article,
-        maximum_characters=maximum_article_characters,
+    """Build the Category-stage prompt for one article."""
+    title, description, article = get_article_prompt_values(
+        row=row,
+        maximum_article_characters=maximum_article_characters,
     )
 
     return (
         prompt_template
+        .replace("{TITLE}", title)
+        .replace("{DESCRIPTION}", description)
+        .replace("{ARTICLE}", article)
+    )
+
+
+def build_section_prompt(
+    prompt_template: str,
+    row: pd.Series,
+    category: str,
+    maximum_article_characters: int | None,
+) -> str:
+    """Build the Category-conditioned Section prompt for one article."""
+    title, description, article = get_article_prompt_values(
+        row=row,
+        maximum_article_characters=maximum_article_characters,
+    )
+
+    examples = SECTION_EXAMPLES.get(
+        category,
+        "Choose the most appropriate valid Section for this Category.",
+    )
+
+    return (
+        prompt_template
+        .replace("{CATEGORY}", category)
+        .replace("{VALID_SECTIONS}", format_valid_sections(category))
+        .replace("{EXAMPLES}", examples)
         .replace("{TITLE}", title)
         .replace("{DESCRIPTION}", description)
         .replace("{ARTICLE}", article)
@@ -358,39 +414,36 @@ def build_prompt(
 # ---------------------------------------------------------------------------
 
 def create_empty_audit_dataframe() -> pd.DataFrame:
-    """Create an empty audit DataFrame with the expected column order."""
+    """Create an empty audit DataFrame with the expected columns."""
     return pd.DataFrame(columns=list(AUDIT_COLUMNS))
 
 
 def load_existing_audit(audit_path: Path) -> pd.DataFrame:
-    """
-    Load a previous audit file so the labeling run can resume.
-
-    Only rows with status='success' are considered completed.
-    """
+    """Load a compatible audit file so labeling can resume."""
     if not audit_path.exists():
         return create_empty_audit_dataframe()
 
     logger.info(
-        "Loading existing labeling audit from %s.",
+        "Loading existing hierarchical labeling audit from %s.",
         audit_path,
     )
 
     audit_dataframe = read_csv(audit_path)
-
     missing_columns = set(AUDIT_COLUMNS) - set(audit_dataframe.columns)
 
     if missing_columns:
         missing = ", ".join(sorted(missing_columns))
         raise LLMLabelGenerationError(
-            f"The existing audit file is missing columns: {missing}"
+            "The existing audit file is incompatible with hierarchical "
+            f"prompt version 4.0 and is missing columns: {missing}. "
+            "Delete the previous llm_label_audit.csv and "
+            "train_llm_labeled.csv before starting the new run."
         )
 
     if audit_dataframe[ID_COLUMN].duplicated().any():
         duplicate_count = int(
             audit_dataframe[ID_COLUMN].duplicated(keep=False).sum()
         )
-
         raise LLMLabelGenerationError(
             f"The audit file contains {duplicate_count} rows with "
             f"duplicated {ID_COLUMN} values."
@@ -400,7 +453,7 @@ def load_existing_audit(audit_path: Path) -> pd.DataFrame:
 
 
 def get_completed_ids(audit_dataframe: pd.DataFrame) -> set[Any]:
-    """Return identifiers that already have successful LLM labels."""
+    """Return article identifiers with successful hierarchical labels."""
     if audit_dataframe.empty:
         return set()
 
@@ -415,43 +468,25 @@ def get_completed_ids(audit_dataframe: pd.DataFrame) -> set[Any]:
 # LLM request and validation
 # ---------------------------------------------------------------------------
 
-def classify_article(
+def request_and_validate(
     client: OllamaClient,
     prompt: str,
+    response_schema: dict[str, Any],
+    parser: Callable[[str], TValidated],
     maximum_validation_attempts: int,
+    stage_name: str,
 ) -> tuple[
-    ValidatedLabels | None,
+    TValidated | None,
     OllamaResponse | None,
     str,
     int,
 ]:
-    """
-    Generate and validate labels for one article.
-
-    Parameters
-    ----------
-    client:
-        Configured Ollama client.
-
-    prompt:
-        Complete article-classification prompt.
-
-    maximum_validation_attempts:
-        Number of times to request a new response when output validation
-        fails.
-
-    Returns
-    -------
-    tuple
-        Validated labels or None, latest response or None, validation error,
-        and number of requests made.
-    """
+    """Request one constrained response and retry validation failures."""
     if maximum_validation_attempts < 1:
         raise ValueError(
-            "maximum_validation_attempts must be at least 1."
+            f"{stage_name} validation attempts must be at least 1."
         )
 
-    response_schema = get_label_response_schema()
     latest_response: OllamaResponse | None = None
     latest_error = ""
 
@@ -465,12 +500,10 @@ def classify_article(
         )
 
         try:
-            labels = parse_label_response(
-                latest_response.content
-            )
+            validated_value = parser(latest_response.content)
 
             return (
-                labels,
+                validated_value,
                 latest_response,
                 "",
                 request_attempt,
@@ -480,8 +513,8 @@ def classify_article(
             latest_error = str(error)
 
             logger.warning(
-                "LLM response failed label validation on attempt "
-                "%d of %d: %s",
+                "%s response failed validation on attempt %d of %d: %s",
+                stage_name,
                 request_attempt,
                 maximum_validation_attempts,
                 error,
@@ -495,22 +528,92 @@ def classify_article(
     )
 
 
+def classify_category(
+    client: OllamaClient,
+    prompt: str,
+    maximum_validation_attempts: int,
+) -> tuple[
+    ValidatedCategory | None,
+    OllamaResponse | None,
+    str,
+    int,
+]:
+    """Generate and validate the broad Category for one article."""
+    return request_and_validate(
+        client=client,
+        prompt=prompt,
+        response_schema=get_category_response_schema(),
+        parser=parse_category_response,
+        maximum_validation_attempts=maximum_validation_attempts,
+        stage_name="Category",
+    )
+
+
+def classify_section(
+    client: OllamaClient,
+    prompt: str,
+    category: str,
+    maximum_validation_attempts: int,
+) -> tuple[
+    ValidatedSection | None,
+    OllamaResponse | None,
+    str,
+    int,
+]:
+    """Generate and validate a Section conditioned on the Category."""
+    return request_and_validate(
+        client=client,
+        prompt=prompt,
+        response_schema=get_section_response_schema(category),
+        parser=lambda content: parse_section_response(
+            response_content=content,
+            category=category,
+        ),
+        maximum_validation_attempts=maximum_validation_attempts,
+        stage_name="Section",
+    )
+
+
 # ---------------------------------------------------------------------------
 # Audit and output creation
 # ---------------------------------------------------------------------------
+
+def get_response_model(
+    category_response: OllamaResponse | None,
+    section_response: OllamaResponse | None,
+    configured_model: str,
+) -> str:
+    """Return the model name reported by Ollama when available."""
+    if section_response is not None:
+        return section_response.model
+
+    if category_response is not None:
+        return category_response.model
+
+    return configured_model
+
 
 def create_audit_record(
     row: pd.Series,
     model_name: str,
     prompt_version: str,
     labels: ValidatedLabels | None,
-    response: OllamaResponse | None,
+    category_response: OllamaResponse | None,
+    section_response: OllamaResponse | None,
     status: str,
-    validation_error: str,
-    request_attempts: int,
-    processing_time_seconds: float,
+    category_validation_error: str,
+    section_validation_error: str,
+    category_request_attempts: int,
+    section_request_attempts: int,
+    category_processing_time_seconds: float,
+    section_processing_time_seconds: float,
 ) -> dict[str, Any]:
-    """Create one audit record for an article-labeling attempt."""
+    """Create one hierarchical audit record."""
+    total_processing_time = (
+        category_processing_time_seconds
+        + section_processing_time_seconds
+    )
+
     return {
         ID_COLUMN: row[ID_COLUMN],
         "original_category": row[CATEGORY_COLUMN],
@@ -521,28 +624,57 @@ def create_audit_record(
         "llm_section": (
             labels.section if labels is not None else ""
         ),
-        "llm_model": (
-            response.model if response is not None else model_name
+        "llm_model": get_response_model(
+            category_response=category_response,
+            section_response=section_response,
+            configured_model=model_name,
         ),
         "prompt_version": prompt_version,
-        "raw_response": (
-            response.content if response is not None else ""
+        "raw_category_response": (
+            category_response.content
+            if category_response is not None
+            else ""
+        ),
+        "raw_section_response": (
+            section_response.content
+            if section_response is not None
+            else ""
         ),
         "status": status,
-        "validation_error": validation_error,
-        "request_attempts": request_attempts,
-        "processing_time_seconds": round(
-            processing_time_seconds,
+        "category_validation_error": category_validation_error,
+        "section_validation_error": section_validation_error,
+        "category_request_attempts": category_request_attempts,
+        "section_request_attempts": section_request_attempts,
+        "category_processing_time_seconds": round(
+            category_processing_time_seconds,
             4,
         ),
-        "prompt_token_count": (
-            response.prompt_eval_count
-            if response is not None
+        "section_processing_time_seconds": round(
+            section_processing_time_seconds,
+            4,
+        ),
+        "total_processing_time_seconds": round(
+            total_processing_time,
+            4,
+        ),
+        "category_prompt_token_count": (
+            category_response.prompt_eval_count
+            if category_response is not None
             else None
         ),
-        "response_token_count": (
-            response.eval_count
-            if response is not None
+        "category_response_token_count": (
+            category_response.eval_count
+            if category_response is not None
+            else None
+        ),
+        "section_prompt_token_count": (
+            section_response.prompt_eval_count
+            if section_response is not None
+            else None
+        ),
+        "section_response_token_count": (
+            section_response.eval_count
+            if section_response is not None
             else None
         ),
         "generated_at_utc": datetime.now(
@@ -555,18 +687,24 @@ def upsert_audit_record(
     audit_dataframe: pd.DataFrame,
     audit_record: dict[str, Any],
 ) -> pd.DataFrame:
-    """
-    Insert or replace an audit record by article identifier.
-
-    Failed records can therefore be replaced by successful records if the
-    script is run again.
-    """
+    """Insert or replace an audit record by article identifier."""
     article_id = audit_record[ID_COLUMN]
 
-    if not audit_dataframe.empty:
-        audit_dataframe = audit_dataframe[
-            audit_dataframe[ID_COLUMN] != article_id
-        ]
+    if audit_dataframe.empty:
+        return pd.DataFrame(
+            [audit_record],
+            columns=list(AUDIT_COLUMNS),
+        )
+
+    remaining_records = audit_dataframe[
+        audit_dataframe[ID_COLUMN] != article_id
+    ]
+
+    if remaining_records.empty:
+        return pd.DataFrame(
+            [audit_record],
+            columns=list(AUDIT_COLUMNS),
+        )
 
     new_record_dataframe = pd.DataFrame(
         [audit_record],
@@ -574,7 +712,7 @@ def upsert_audit_record(
     )
 
     return pd.concat(
-        [audit_dataframe, new_record_dataframe],
+        [remaining_records, new_record_dataframe],
         ignore_index=True,
     )
 
@@ -583,15 +721,13 @@ def create_llm_labeled_dataset(
     original_training_dataframe: pd.DataFrame,
     audit_dataframe: pd.DataFrame,
 ) -> pd.DataFrame:
-    """
-    Create the training dataset whose target columns use LLM labels.
-
-    Only successfully labeled rows are included. Before the final pipeline
-    proceeds, the row count should equal the original training row count.
-    """
+    """Create the training dataset whose targets use generated labels."""
     successful_audit = audit_dataframe[
         audit_dataframe["status"] == "success"
     ].copy()
+
+    if successful_audit.empty:
+        return original_training_dataframe.iloc[0:0].copy()
 
     label_lookup = successful_audit.set_index(ID_COLUMN)[
         ["llm_category", "llm_section"]
@@ -609,7 +745,6 @@ def create_llm_labeled_dataset(
         .map(label_lookup["llm_section"])
     )
 
-    # During checkpointing, unsuccessful or incomplete rows are omitted.
     completed_mask = (
         llm_labeled_dataframe[CATEGORY_COLUMN].notna()
         & llm_labeled_dataframe[SECTION_COLUMN].notna()
@@ -627,7 +762,7 @@ def save_progress(
     llm_output_path: Path,
     audit_path: Path,
 ) -> None:
-    """Save the current audit and LLM-labeled training datasets."""
+    """Save the current audit and generated training dataset."""
     audit_dataframe = (
         audit_dataframe
         .sort_values(by=ID_COLUMN)
@@ -655,21 +790,14 @@ def verify_final_output(
     audit_dataframe: pd.DataFrame,
     llm_labeled_dataframe: pd.DataFrame,
 ) -> None:
-    """
-    Verify that all training rows received valid LLM labels.
-
-    Raises
-    ------
-    LLMLabelGenerationError
-        If labeling is incomplete or article data changed.
-    """
+    """Verify completeness, hierarchy validity, and data preservation."""
     successful_audit = audit_dataframe[
         audit_dataframe["status"] == "success"
     ]
 
     if len(successful_audit) != len(original_training_dataframe):
         raise LLMLabelGenerationError(
-            "The LLM labeling run is incomplete. "
+            "The hierarchical LLM labeling run is incomplete. "
             f"Successful rows: {len(successful_audit)}; "
             f"expected rows: {len(original_training_dataframe)}."
         )
@@ -680,6 +808,19 @@ def verify_final_output(
         raise LLMLabelGenerationError(
             "The final LLM-labeled dataset has an unexpected row count."
         )
+
+    for _, audit_row in successful_audit.iterrows():
+        try:
+            validate_label_pair(
+                category=str(audit_row["llm_category"]),
+                section=str(audit_row["llm_section"]),
+            )
+
+        except LabelValidationError as error:
+            raise LLMLabelGenerationError(
+                "The audit contains an invalid hierarchical pair for "
+                f"Index={audit_row[ID_COLUMN]}: {error}"
+            ) from error
 
     non_label_columns = [
         column
@@ -717,28 +858,29 @@ def verify_final_output(
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    """Run the LLM-assisted labeling pipeline."""
-    logger.info("Starting LLM-assisted label generation.")
+    """Run hierarchical LLM-assisted label generation."""
+    logger.info(
+        "Starting hierarchical LLM-assisted label generation."
+    )
 
     config = load_config(CONFIG_PATH)
-
     dataset_config = config["dataset"]
     llm_config = config["llm"]
 
     training_path = resolve_project_path(
         str(dataset_config["train_file"])
     )
-
     llm_output_path = resolve_project_path(
         str(dataset_config["llm_train_file"])
     )
-
     audit_path = resolve_project_path(
         str(dataset_config["audit_file"])
     )
-
-    prompt_path = resolve_project_path(
-        str(llm_config["prompt_file"])
+    category_prompt_path = resolve_project_path(
+        str(llm_config["category_prompt_file"])
+    )
+    section_prompt_path = resolve_project_path(
+        str(llm_config["section_prompt_file"])
     )
 
     model_name = str(llm_config["model"])
@@ -748,27 +890,24 @@ def main() -> None:
             "http://localhost:11434",
         )
     )
-
     temperature = float(
         llm_config.get("temperature", 0.0)
     )
-
     timeout_seconds = float(
         llm_config.get("timeout_seconds", 300.0)
     )
-
     connection_retries = int(
         llm_config.get("connection_retries", 2)
     )
-
     retry_delay_seconds = float(
         llm_config.get("retry_delay_seconds", 2.0)
     )
-
-    validation_attempts = int(
-        llm_config.get("validation_attempts", 3)
+    category_validation_attempts = int(
+        llm_config.get("category_validation_attempts", 3)
     )
-
+    section_validation_attempts = int(
+        llm_config.get("section_validation_attempts", 3)
+    )
     checkpoint_interval = int(
         llm_config.get("checkpoint_interval", 10)
     )
@@ -777,7 +916,6 @@ def main() -> None:
         "max_article_characters",
         3000,
     )
-
     maximum_article_characters = (
         None
         if maximum_article_characters_value is None
@@ -785,12 +923,22 @@ def main() -> None:
     )
 
     prompt_version = str(
-        llm_config.get("prompt_version", "1.0")
+        llm_config.get("prompt_version", "4.0")
     )
 
     if checkpoint_interval < 1:
         raise LLMLabelGenerationError(
             "llm.checkpoint_interval must be at least 1."
+        )
+
+    if category_validation_attempts < 1:
+        raise LLMLabelGenerationError(
+            "llm.category_validation_attempts must be at least 1."
+        )
+
+    if section_validation_attempts < 1:
+        raise LLMLabelGenerationError(
+            "llm.section_validation_attempts must be at least 1."
         )
 
     if not training_path.exists():
@@ -807,7 +955,29 @@ def main() -> None:
     training_dataframe = read_csv(training_path)
     validate_training_dataset(training_dataframe)
 
-    prompt_template = load_prompt(prompt_path)
+    category_prompt_template = load_prompt(
+        prompt_path=category_prompt_path,
+        required_placeholders=(
+            "{TITLE}",
+            "{DESCRIPTION}",
+            "{ARTICLE}",
+        ),
+        prompt_name="Category",
+    )
+
+    section_prompt_template = load_prompt(
+        prompt_path=section_prompt_path,
+        required_placeholders=(
+            "{CATEGORY}",
+            "{VALID_SECTIONS}",
+            "{EXAMPLES}",
+            "{TITLE}",
+            "{DESCRIPTION}",
+            "{ARTICLE}",
+        ),
+        prompt_name="Section",
+    )
+
     audit_dataframe = load_existing_audit(audit_path)
     completed_ids = get_completed_ids(audit_dataframe)
 
@@ -842,47 +1012,99 @@ def main() -> None:
             article_id = row[ID_COLUMN]
 
             logger.info(
-                "Labeling article %d of %d. Index=%s",
+                "Hierarchically labeling article %d of %d. Index=%s",
                 sequence_number,
                 len(pending_dataframe),
                 article_id,
             )
 
-            prompt = build_prompt(
-                prompt_template=prompt_template,
+            labels: ValidatedLabels | None = None
+            category_response: OllamaResponse | None = None
+            section_response: OllamaResponse | None = None
+            category_validation_error = ""
+            section_validation_error = ""
+            category_request_attempts = 0
+            section_request_attempts = 0
+            category_processing_time = 0.0
+            section_processing_time = 0.0
+            status = "request_failed"
+
+            category_prompt = build_category_prompt(
+                prompt_template=category_prompt_template,
                 row=row,
                 maximum_article_characters=(
                     maximum_article_characters
                 ),
             )
 
-            start_time = time.perf_counter()
-
             try:
+                category_start_time = time.perf_counter()
+
                 (
-                    labels,
-                    response,
-                    validation_error,
-                    request_attempts,
-                ) = classify_article(
+                    validated_category,
+                    category_response,
+                    category_validation_error,
+                    category_request_attempts,
+                ) = classify_category(
                     client=client,
-                    prompt=prompt,
+                    prompt=category_prompt,
                     maximum_validation_attempts=(
-                        validation_attempts
+                        category_validation_attempts
                     ),
                 )
 
-                if labels is None:
-                    status = "validation_failed"
+                category_processing_time = (
+                    time.perf_counter() - category_start_time
+                )
+
+                if validated_category is None:
+                    status = "category_validation_failed"
+
                 else:
-                    status = "success"
+                    section_prompt = build_section_prompt(
+                        prompt_template=section_prompt_template,
+                        row=row,
+                        category=validated_category.category,
+                        maximum_article_characters=(
+                            maximum_article_characters
+                        ),
+                    )
+
+                    section_start_time = time.perf_counter()
+
+                    (
+                        validated_section,
+                        section_response,
+                        section_validation_error,
+                        section_request_attempts,
+                    ) = classify_section(
+                        client=client,
+                        prompt=section_prompt,
+                        category=validated_category.category,
+                        maximum_validation_attempts=(
+                            section_validation_attempts
+                        ),
+                    )
+
+                    section_processing_time = (
+                        time.perf_counter() - section_start_time
+                    )
+
+                    if validated_section is None:
+                        status = "section_validation_failed"
+
+                    else:
+                        labels = validate_label_pair(
+                            category=validated_category.category,
+                            section=validated_section.section,
+                        )
+                        status = "success"
 
             except OllamaClientError as error:
-                labels = None
-                response = None
-                validation_error = str(error)
-                request_attempts = 1
-                status = "request_failed"
+                if category_response is None:
+                    category_validation_error = str(error)
+                else:
+                    section_validation_error = str(error)
 
                 logger.error(
                     "Ollama failed for article Index=%s: %s",
@@ -890,20 +1112,43 @@ def main() -> None:
                     error,
                 )
 
-            processing_time = (
-                time.perf_counter() - start_time
-            )
+            except LabelValidationError as error:
+                section_validation_error = str(error)
+                status = "pair_validation_failed"
+
+                logger.error(
+                    "Final hierarchical pair validation failed for "
+                    "Index=%s: %s",
+                    article_id,
+                    error,
+                )
 
             audit_record = create_audit_record(
                 row=row,
                 model_name=model_name,
                 prompt_version=prompt_version,
                 labels=labels,
-                response=response,
+                category_response=category_response,
+                section_response=section_response,
                 status=status,
-                validation_error=validation_error,
-                request_attempts=request_attempts,
-                processing_time_seconds=processing_time,
+                category_validation_error=(
+                    category_validation_error
+                ),
+                section_validation_error=(
+                    section_validation_error
+                ),
+                category_request_attempts=(
+                    category_request_attempts
+                ),
+                section_request_attempts=(
+                    section_request_attempts
+                ),
+                category_processing_time_seconds=(
+                    category_processing_time
+                ),
+                section_processing_time_seconds=(
+                    section_processing_time
+                ),
             )
 
             audit_dataframe = upsert_audit_record(
@@ -913,19 +1158,14 @@ def main() -> None:
 
             processed_since_checkpoint += 1
 
-            if (
-                processed_since_checkpoint
-                >= checkpoint_interval
-            ):
+            if processed_since_checkpoint >= checkpoint_interval:
                 logger.info(
-                    "Saving labeling checkpoint after %d rows.",
+                    "Saving hierarchical labeling checkpoint after %d rows.",
                     processed_since_checkpoint,
                 )
 
                 save_progress(
-                    original_training_dataframe=(
-                        training_dataframe
-                    ),
+                    original_training_dataframe=training_dataframe,
                     audit_dataframe=audit_dataframe,
                     llm_output_path=llm_output_path,
                     audit_path=audit_path,
@@ -933,7 +1173,6 @@ def main() -> None:
 
                 processed_since_checkpoint = 0
 
-    # Always save after the loop, including when no rows were pending.
     save_progress(
         original_training_dataframe=training_dataframe,
         audit_dataframe=audit_dataframe,
@@ -950,13 +1189,13 @@ def main() -> None:
 
     if not failed_rows.empty:
         logger.warning(
-            "LLM labeling completed with %d unsuccessful rows. "
+            "Hierarchical labeling completed with %d unsuccessful rows. "
             "Run the script again to retry them.",
             len(failed_rows),
         )
 
         raise LLMLabelGenerationError(
-            "Some articles did not receive valid LLM labels. "
+            "Some articles did not receive valid hierarchical labels. "
             "Review the audit file and rerun the script."
         )
 
@@ -967,8 +1206,8 @@ def main() -> None:
     )
 
     logger.info(
-        "LLM-assisted label generation completed successfully. "
-        "Generated labels for %d articles.",
+        "Hierarchical LLM-assisted label generation completed "
+        "successfully. Generated labels for %d articles.",
         len(final_llm_dataframe),
     )
 
@@ -979,20 +1218,20 @@ if __name__ == "__main__":
 
     except LLMLabelGenerationError as error:
         logger.error(
-            "LLM-assisted label generation failed: %s",
+            "Hierarchical LLM label generation failed: %s",
             error,
         )
         raise SystemExit(1) from error
 
     except KeyboardInterrupt:
         logger.warning(
-            "LLM-assisted label generation was interrupted by the user."
+            "Hierarchical LLM label generation was interrupted by the user."
         )
         raise SystemExit(130)
 
     except Exception:
         logger.exception(
-            "LLM-assisted label generation failed because of an "
+            "Hierarchical LLM label generation failed because of an "
             "unexpected error."
         )
         raise SystemExit(1)

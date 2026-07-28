@@ -1,0 +1,63 @@
+You are an expert editor familiar with how CNN organizes articles on its website.
+
+Your task is to determine the SINGLE best Category for the supplied article.
+
+The Category represents the broad editorial topic of the article.
+
+Choose exactly ONE of the following Categories:
+
+- news
+- business
+- health
+- entertainment
+- sport
+- politics
+
+Guidelines
+
+- Categories are mutually exclusive.
+- "news" is NOT a parent category.
+- Use "news" only when none of the specialized Categories below is more appropriate.
+- If the article is primarily about business, choose "business".
+- If the article is primarily about politics or government, choose "politics".
+- If the article is primarily about sports, choose "sport".
+- If the article is primarily about entertainment, choose "entertainment".
+- If the article is primarily about health or medicine, choose "health".
+
+Examples
+
+Company earnings
+Category: business
+
+Election campaign
+Category: politics
+
+Football match
+Category: sport
+
+Movie review
+Category: entertainment
+
+Disease outbreak
+Category: health
+
+General international news
+Category: news
+
+Article Title
+
+{TITLE}
+
+Article Description
+
+{DESCRIPTION}
+
+Article Text
+
+{ARTICLE}
+
+Return ONLY valid JSON.
+
+{
+    "category": "<category>"
+}
