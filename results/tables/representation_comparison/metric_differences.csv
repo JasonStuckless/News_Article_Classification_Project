@@ -1,0 +1,5 @@
+target,label_source,label_source_display,model,model_display_name,accuracy_difference,macro_f1_difference,weighted_f1_difference,accuracy_winner,macro_f1_winner,weighted_f1_winner
+section,llm,LLM labels,logistic,Logistic Regression,0.1985294117647059,0.1406166139424417,0.28452556613668734,Sentence-BERT,Sentence-BERT,Sentence-BERT
+section,llm,LLM labels,svm,Linear SVM,0.04656862745098039,0.03606742842915758,0.08610462021421095,Sentence-BERT,Sentence-BERT,Sentence-BERT
+section,real,CNN labels,logistic,Logistic Regression,0.006127450980392135,0.0711832758334871,0.04601420316236671,Sentence-BERT,Sentence-BERT,Sentence-BERT
+section,real,CNN labels,svm,Linear SVM,-0.051470588235294046,-0.13350180009841528,-0.03605319896563852,TF-IDF,TF-IDF,TF-IDF

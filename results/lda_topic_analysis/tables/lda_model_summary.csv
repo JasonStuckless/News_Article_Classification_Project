@@ -1,0 +1,2 @@
+Articles,Vocabulary size,Number of topics,Top terms per topic,LDA iterations,Perplexity,Mean dominant-topic probability,Median dominant-topic probability
+4076,4432,12,12,30,2233.1546901619313,0.6316024231455664,0.5978448130798824

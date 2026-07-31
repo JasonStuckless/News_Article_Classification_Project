@@ -1,0 +1,212 @@
+{
+  "artifact_version": "1.0",
+  "created_at_utc": "2026-07-30T21:42:05.842265+00:00",
+  "embedding_dimension": 384,
+  "evaluated_artifacts": [
+    {
+      "label_source": "llm",
+      "model": "logistic",
+      "model_path": "models\\sentence_bert\\category\\llm\\logistic.pkl",
+      "target": "category",
+      "unseen_test_classes": []
+    },
+    {
+      "label_source": "llm",
+      "model": "neural_network",
+      "model_path": "models\\sentence_bert\\category\\llm\\neural_network.pkl",
+      "target": "category",
+      "unseen_test_classes": []
+    },
+    {
+      "label_source": "llm",
+      "model": "random_forest",
+      "model_path": "models\\sentence_bert\\category\\llm\\random_forest.pkl",
+      "target": "category",
+      "unseen_test_classes": []
+    },
+    {
+      "label_source": "llm",
+      "model": "svm",
+      "model_path": "models\\sentence_bert\\category\\llm\\svm.pkl",
+      "target": "category",
+      "unseen_test_classes": []
+    },
+    {
+      "label_source": "llm",
+      "model": "xgboost",
+      "model_path": "models\\sentence_bert\\category\\llm\\xgboost.pkl",
+      "target": "category",
+      "unseen_test_classes": []
+    },
+    {
+      "label_source": "real",
+      "model": "logistic",
+      "model_path": "models\\sentence_bert\\category\\real\\logistic.pkl",
+      "target": "category",
+      "unseen_test_classes": []
+    },
+    {
+      "label_source": "real",
+      "model": "neural_network",
+      "model_path": "models\\sentence_bert\\category\\real\\neural_network.pkl",
+      "target": "category",
+      "unseen_test_classes": []
+    },
+    {
+      "label_source": "real",
+      "model": "random_forest",
+      "model_path": "models\\sentence_bert\\category\\real\\random_forest.pkl",
+      "target": "category",
+      "unseen_test_classes": []
+    },
+    {
+      "label_source": "real",
+      "model": "svm",
+      "model_path": "models\\sentence_bert\\category\\real\\svm.pkl",
+      "target": "category",
+      "unseen_test_classes": []
+    },
+    {
+      "label_source": "real",
+      "model": "xgboost",
+      "model_path": "models\\sentence_bert\\category\\real\\xgboost.pkl",
+      "target": "category",
+      "unseen_test_classes": []
+    },
+    {
+      "label_source": "llm",
+      "model": "logistic",
+      "model_path": "models\\sentence_bert\\section\\llm\\logistic.pkl",
+      "target": "section",
+      "unseen_test_classes": [
+        "investing",
+        "media",
+        "perspectives",
+        "success",
+        "tech",
+        "weather"
+      ]
+    },
+    {
+      "label_source": "llm",
+      "model": "neural_network",
+      "model_path": "models\\sentence_bert\\section\\llm\\neural_network.pkl",
+      "target": "section",
+      "unseen_test_classes": [
+        "investing",
+        "media",
+        "perspectives",
+        "success",
+        "tech",
+        "weather"
+      ]
+    },
+    {
+      "label_source": "llm",
+      "model": "random_forest",
+      "model_path": "models\\sentence_bert\\section\\llm\\random_forest.pkl",
+      "target": "section",
+      "unseen_test_classes": [
+        "investing",
+        "media",
+        "perspectives",
+        "success",
+        "tech",
+        "weather"
+      ]
+    },
+    {
+      "label_source": "llm",
+      "model": "svm",
+      "model_path": "models\\sentence_bert\\section\\llm\\svm.pkl",
+      "target": "section",
+      "unseen_test_classes": [
+        "investing",
+        "media",
+        "perspectives",
+        "success",
+        "tech",
+        "weather"
+      ]
+    },
+    {
+      "label_source": "llm",
+      "model": "xgboost",
+      "model_path": "models\\sentence_bert\\section\\llm\\xgboost.pkl",
+      "target": "section",
+      "unseen_test_classes": [
+        "investing",
+        "media",
+        "perspectives",
+        "success",
+        "tech",
+        "weather"
+      ]
+    },
+    {
+      "label_source": "real",
+      "model": "logistic",
+      "model_path": "models\\sentence_bert\\section\\real\\logistic.pkl",
+      "target": "section",
+      "unseen_test_classes": [
+        "intl_world",
+        "movies"
+      ]
+    },
+    {
+      "label_source": "real",
+      "model": "neural_network",
+      "model_path": "models\\sentence_bert\\section\\real\\neural_network.pkl",
+      "target": "section",
+      "unseen_test_classes": [
+        "intl_world",
+        "movies"
+      ]
+    },
+    {
+      "label_source": "real",
+      "model": "random_forest",
+      "model_path": "models\\sentence_bert\\section\\real\\random_forest.pkl",
+      "target": "section",
+      "unseen_test_classes": [
+        "intl_world",
+        "movies"
+      ]
+    },
+    {
+      "label_source": "real",
+      "model": "svm",
+      "model_path": "models\\sentence_bert\\section\\real\\svm.pkl",
+      "target": "section",
+      "unseen_test_classes": [
+        "intl_world",
+        "movies"
+      ]
+    },
+    {
+      "label_source": "real",
+      "model": "xgboost",
+      "model_path": "models\\sentence_bert\\section\\real\\xgboost.pkl",
+      "target": "section",
+      "unseen_test_classes": [
+        "intl_world",
+        "movies"
+      ]
+    }
+  ],
+  "evaluation_truth": "original CNN test labels",
+  "models_evaluated": 20,
+  "outputs": {
+    "classification_report_directory": "results\\tables\\sentence_bert\\classification_reports",
+    "confusion_matrix_figure_directory": "results\\figures\\sentence_bert\\confusion_matrices",
+    "confusion_matrix_table_directory": "results\\tables\\sentence_bert\\confusion_matrices",
+    "macro_f1_figure": "results\\figures\\sentence_bert\\embedding_macro_f1_comparison.png",
+    "per_class_metrics": "results\\tables\\sentence_bert\\embedding_per_class_metrics.csv",
+    "performance_figure": "results\\figures\\sentence_bert\\embedding_model_performance.png",
+    "predictions": "results\\tables\\sentence_bert\\embedding_predictions.csv",
+    "summary": "results\\tables\\sentence_bert\\embedding_model_evaluation_summary.csv"
+  },
+  "representation": "sentence_bert",
+  "test_rows": 816,
+  "total_evaluation_time_seconds": 23.938983800355345
+}

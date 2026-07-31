@@ -1,0 +1,7 @@
+Category,Train articles,Test articles,Train percentage,Test percentage,Percentage-point difference
+sport,1740,436,53.37,53.43,0.06
+news,1289,322,39.54,39.46,0.08
+business,83,21,2.55,2.57,0.03
+politics,60,15,1.84,1.84,0.0
+entertainment,46,12,1.41,1.47,0.06
+health,42,10,1.29,1.23,0.06

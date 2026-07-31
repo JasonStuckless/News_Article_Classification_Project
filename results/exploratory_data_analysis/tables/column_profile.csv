@@ -1,0 +1,12 @@
+Column,Data type,Missing values,Missing percentage,Unique values
+Article text,object,0,0.0,4075
+Author,object,0,0.0,1531
+Category,object,0,0.0,6
+Date published,object,0,0.0,4076
+Description,object,0,0.0,4069
+Headline,object,0,0.0,4071
+Index,int64,0,0.0,4076
+Keywords,object,0,0.0,4071
+Second headline,object,0,0.0,4073
+Section,object,0,0.0,37
+Url,object,0,0.0,4076

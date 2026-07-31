@@ -1,0 +1,5 @@
+dataset,label_definition,article_count,mean_neighbor_agreement,median_neighbor_agreement,standard_deviation,minimum_neighbor_agreement,maximum_neighbor_agreement,perfect_agreement_article_ratio,zero_agreement_article_ratio,mean_cosine_similarity
+training_label_comparison,original_category,3260,0.9138036809815951,1.0,0.21302971941718404,0.0,1.0,0.8021472392638037,0.02116564417177914,0.6011831164360046
+training_label_comparison,llm_category,3260,0.6605521472392637,0.8,0.33974116374308605,0.0,1.0,0.36441717791411044,0.0843558282208589,0.6011831164360046
+training_label_comparison,original_section,3260,0.7703067484662576,1.0,0.31666686795877624,0.0,1.0,0.5383435582822086,0.06503067484662577,0.6011831164360046
+training_label_comparison,llm_section,3260,0.5160736196319019,0.6,0.3643173587327073,0.0,1.0,0.2294478527607362,0.1794478527607362,0.6011831164360046

@@ -27230,3 +27230,215 @@ Total hierarchical labeling time: 4841.61 seconds
 2026-07-28 17:52:47 | INFO     | __main__ | Saved LLM agreement figure to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\figures\llm_label_agreement_macro_metrics.png.
 2026-07-28 17:52:47 | INFO     | __main__ | Saved LLM agreement figure to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\figures\llm_label_agreement_weighted_metrics.png.
 2026-07-28 17:52:47 | INFO     | __main__ | Figure and table generation completed successfully.
+2026-07-30 17:31:33 | INFO     | __main__ | Starting exploratory data analysis.
+2026-07-30 17:31:33 | INFO     | __main__ | Loading original dataset from C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\data\raw\cnn_original.csv.
+2026-07-30 17:31:33 | INFO     | __main__ | Loading training dataset from C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\data\interim\train_original.csv.
+2026-07-30 17:31:33 | INFO     | __main__ | Loading testing dataset from C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\data\interim\test_original.csv.
+2026-07-30 17:31:35 | INFO     | __main__ | Saved analysis table to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\tables\dataset_quality_summary.csv.
+2026-07-30 17:31:35 | INFO     | __main__ | Saved analysis table to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\tables\column_profile.csv.
+2026-07-30 17:31:35 | INFO     | __main__ | Saved analysis table to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\tables\text_feature_statistics.csv.
+2026-07-30 17:31:35 | INFO     | __main__ | Saved analysis table to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\tables\category_statistics.csv.
+2026-07-30 17:31:35 | INFO     | __main__ | Saved analysis table to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\tables\processing_comparison.csv.
+2026-07-30 17:31:35 | INFO     | __main__ | Saved analysis table to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\tables\category_distribution.csv.
+2026-07-30 17:31:35 | INFO     | __main__ | Saved analysis table to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\tables\section_distribution.csv.
+2026-07-30 17:31:35 | INFO     | __main__ | Saved analysis table to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\tables\category_section_contingency.csv.
+2026-07-30 17:31:35 | INFO     | __main__ | Saved analysis table to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\tables\train_test_category_distribution.csv.
+2026-07-30 17:31:35 | INFO     | __main__ | Saved analysis table to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\tables\train_test_section_distribution.csv.
+2026-07-30 17:31:35 | INFO     | __main__ | Saved analysis table to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\tables\publication_year_distribution.csv.
+2026-07-30 17:31:36 | INFO     | __main__ | Saved figure to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\figures\dataset_quality_checks.png.
+2026-07-30 17:31:36 | INFO     | __main__ | Saved figure to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\figures\missing_values_by_column.png.
+2026-07-30 17:31:36 | INFO     | __main__ | Saved figure to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\figures\category_distribution.png.
+2026-07-30 17:31:37 | INFO     | __main__ | Saved figure to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\figures\section_distribution.png.
+2026-07-30 17:31:38 | INFO     | __main__ | Saved figure to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\figures\category_section_heatmap.png.
+2026-07-30 17:31:38 | INFO     | __main__ | Saved figure to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\figures\text_component_word_distributions.png.
+2026-07-30 17:31:38 | INFO     | __main__ | Saved figure to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\figures\article_text_length_distribution.png.
+2026-07-30 17:31:38 | INFO     | __main__ | Saved figure to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\figures\median_article_length_by_category.png.
+2026-07-30 17:31:39 | INFO     | __main__ | Saved figure to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\figures\baseline_enhanced_text_length_comparison.png.
+2026-07-30 17:31:39 | INFO     | __main__ | Saved figure to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\figures\train_test_category_distribution.png.
+2026-07-30 17:31:39 | INFO     | __main__ | Saved figure to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\figures\train_test_section_distribution.png.
+2026-07-30 17:31:39 | INFO     | __main__ | Saved figure to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\figures\articles_by_publication_year.png.
+2026-07-30 17:31:39 | INFO     | __main__ | Publication date range: 2012-12-06 to 2022-03-15.
+2026-07-30 17:31:39 | INFO     | __main__ | Exploratory data analysis completed successfully. Tables: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\tables; figures: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\exploratory_data_analysis\figures.
+2026-07-30 17:31:41 | INFO     | __main__ | Loading original dataset from C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\data\raw\cnn_original.csv.
+2026-07-30 17:31:42 | INFO     | __main__ | Vectorizing 4076 articles for LDA topic analysis.
+2026-07-30 17:31:42 | INFO     | __main__ | Fitting 12-topic LDA model with 4432 vocabulary terms.
+2026-07-30 17:31:49 | INFO     | __main__ | Saved table: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\tables\lda_model_summary.csv
+2026-07-30 17:31:49 | INFO     | __main__ | Saved table: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\tables\lda_topic_summary.csv
+2026-07-30 17:31:49 | INFO     | __main__ | Saved table: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\tables\lda_top_term_weights.csv
+2026-07-30 17:31:49 | INFO     | __main__ | Saved table: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\tables\lda_article_topics.csv
+2026-07-30 17:31:49 | INFO     | __main__ | Saved table: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\tables\lda_topic_category_counts.csv
+2026-07-30 17:31:49 | INFO     | __main__ | Saved table: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\tables\lda_topic_category_proportions.csv
+2026-07-30 17:31:49 | INFO     | __main__ | Saved table: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\tables\lda_topic_section_counts.csv
+2026-07-30 17:31:49 | INFO     | __main__ | Saved table: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\tables\lda_topic_section_proportions.csv
+2026-07-30 17:31:49 | INFO     | __main__ | Saved table: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\tables\lda_label_alignment_metrics.csv
+2026-07-30 17:31:49 | INFO     | __main__ | Saved table: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\tables\lda_news_topic_distribution.csv
+2026-07-30 17:31:49 | INFO     | __main__ | Saved artifact: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\artifacts\lda_count_vectorizer.pkl
+2026-07-30 17:31:49 | INFO     | __main__ | Saved artifact: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\artifacts\lda_model.pkl
+2026-07-30 17:31:49 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\figures\lda_topic_article_distribution.png
+2026-07-30 17:31:51 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\figures\lda_top_terms_by_topic.png
+2026-07-30 17:31:51 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\figures\lda_topic_category_counts.png
+2026-07-30 17:31:51 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\figures\lda_topic_category_proportions.png
+2026-07-30 17:31:52 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\figures\lda_topic_section_counts.png
+2026-07-30 17:31:53 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\figures\lda_topic_section_proportions.png
+2026-07-30 17:31:53 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\figures\lda_label_alignment_metrics.png
+2026-07-30 17:31:53 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\figures\lda_topic_probability_distribution.png
+2026-07-30 17:31:54 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\figures\lda_topic_probability_by_topic.png
+2026-07-30 17:31:54 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\figures\lda_news_topic_distribution.png
+2026-07-30 17:31:54 | INFO     | __main__ | LDA topic analysis completed successfully. Category NMI=0.117; Category ARI=0.055. Tables: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\tables; figures: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\figures; artifacts: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\lda_topic_analysis\artifacts.
+2026-07-30 17:31:55 | INFO     | __main__ | Starting Sentence-BERT embedding generation.
+2026-07-30 17:31:56 | INFO     | __main__ | Applying notebook-compatible enhanced text preprocessing.
+2026-07-30 17:32:04 | INFO     | __main__ | Loading Sentence-BERT model: sentence-transformers/all-MiniLM-L6-v2
+2026-07-30 17:32:10 | INFO     | __main__ | Generating training embeddings for 3260 articles.
+2026-07-30 17:33:15 | INFO     | __main__ | Training embedding matrix shape: (3260, 384)
+2026-07-30 17:33:15 | INFO     | __main__ | Generating testing embeddings for 816 articles.
+2026-07-30 17:33:31 | INFO     | __main__ | Testing embedding matrix shape: (816, 384)
+2026-07-30 17:33:31 | INFO     | __main__ | Generating full-dataset embeddings for 4076 articles.
+2026-07-30 17:34:55 | INFO     | __main__ | Full-dataset embedding matrix shape: (4076, 384)
+2026-07-30 17:34:56 | INFO     | __main__ | Saved Sentence-BERT embeddings with dimension 384 to C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\data\processed\sentence_embeddings.
+2026-07-30 17:34:56 | INFO     | __main__ | Sentence-BERT embedding generation completed successfully.
+2026-07-30 17:34:58 | INFO     | __main__ | Starting semantic nearest-neighbour analysis.
+2026-07-30 17:34:58 | INFO     | __main__ | Finding 5 nearest neighbours for 4076 full-dataset articles.
+2026-07-30 17:34:59 | INFO     | __main__ | Finding 5 nearest neighbours for 3260 training articles.
+2026-07-30 17:35:00 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\figures\semantic_neighbors\full_similarity_distribution.png
+2026-07-30 17:35:00 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\figures\semantic_neighbors\full_category_section_consistency.png
+2026-07-30 17:35:00 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\figures\semantic_neighbors\cnn_vs_llm_label_consistency.png
+2026-07-30 17:35:01 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\figures\semantic_neighbors\cnn_vs_llm_mean_median_consistency.png
+2026-07-30 17:35:01 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\figures\semantic_neighbors\full_category_class_consistency.png
+2026-07-30 17:35:01 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\figures\semantic_neighbors\full_section_class_consistency.png
+2026-07-30 17:35:01 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\figures\semantic_neighbors\train_original_category_class_consistency.png
+2026-07-30 17:35:01 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\figures\semantic_neighbors\train_llm_category_class_consistency.png
+2026-07-30 17:35:01 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\figures\semantic_neighbors\train_original_section_class_consistency.png
+2026-07-30 17:35:02 | INFO     | __main__ | Saved figure: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\figures\semantic_neighbors\train_llm_section_class_consistency.png
+2026-07-30 17:35:02 | INFO     | __main__ | Semantic neighbour analysis completed. Tables: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\tables\semantic_neighbors; figures: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\figures\semantic_neighbors.
+2026-07-30 17:35:03 | INFO     | __main__ | Starting Sentence-BERT model training.
+2026-07-30 17:35:03 | INFO     | __main__ | Loaded original-label training dataset: 3260 rows.
+2026-07-30 17:35:03 | INFO     | __main__ | Loaded LLM-label training dataset: 3260 rows.
+2026-07-30 17:35:03 | INFO     | __main__ | Original-label and LLM-label training datasets are aligned.
+2026-07-30 17:35:03 | INFO     | __main__ | Embedding metadata is aligned with the training dataset.
+2026-07-30 17:35:03 | INFO     | __main__ | Loaded training embeddings: 3260 rows and 384 dimensions.
+2026-07-30 17:35:03 | INFO     | __main__ | category/real label distribution: 6 classes; minimum class count=42; maximum class count=1740.
+2026-07-30 17:35:03 | INFO     | __main__ | Training Logistic Regression for category using real labels (6 classes).
+2026-07-30 17:35:03 | INFO     | __main__ | Saved Logistic Regression in 0.131 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\category\real\logistic.pkl
+2026-07-30 17:35:03 | INFO     | __main__ | Training Linear SVM for category using real labels (6 classes).
+2026-07-30 17:35:04 | INFO     | __main__ | Saved Linear SVM in 0.205 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\category\real\svm.pkl
+2026-07-30 17:35:04 | INFO     | __main__ | Training Random Forest for category using real labels (6 classes).
+2026-07-30 17:35:05 | INFO     | __main__ | Saved Random Forest in 1.451 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\category\real\random_forest.pkl
+2026-07-30 17:35:05 | ERROR    | __main__ | Sentence-BERT model training failed.
+Traceback (most recent call last):
+  File "C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\src\10_train_embedding_models.py", line 567, in build_classifier
+    return create_xgboost_classifier(parameters, random_seed)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\src\10_train_embedding_models.py", line 545, in create_xgboost_classifier
+    return XGBClassifier(random_state=random_seed, **parameters)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: xgboost.sklearn.XGBClassifier() got multiple values for keyword argument 'random_state'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\src\10_train_embedding_models.py", line 876, in <module>
+    run_embedding_model_training()
+  File "C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\src\10_train_embedding_models.py", line 815, in run_embedding_model_training
+    train_one_model(
+  File "C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\src\10_train_embedding_models.py", line 631, in train_one_model
+    classifier = build_classifier(setting, random_seed)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\src\10_train_embedding_models.py", line 570, in build_classifier
+    raise EmbeddingModelTrainingError(
+EmbeddingModelTrainingError: Invalid parameters for xgboost: xgboost.sklearn.XGBClassifier() got multiple values for keyword argument 'random_state'
+2026-07-30 17:39:23 | INFO     | __main__ | Starting Sentence-BERT model training.
+2026-07-30 17:39:23 | INFO     | __main__ | Loaded original-label training dataset: 3260 rows.
+2026-07-30 17:39:23 | INFO     | __main__ | Loaded LLM-label training dataset: 3260 rows.
+2026-07-30 17:39:23 | INFO     | __main__ | Original-label and LLM-label training datasets are aligned.
+2026-07-30 17:39:23 | INFO     | __main__ | Embedding metadata is aligned with the training dataset.
+2026-07-30 17:39:23 | INFO     | __main__ | Loaded training embeddings: 3260 rows and 384 dimensions.
+2026-07-30 17:39:23 | INFO     | __main__ | category/real label distribution: 6 classes; minimum class count=42; maximum class count=1740.
+2026-07-30 17:39:23 | INFO     | __main__ | Training Logistic Regression for category using real labels (6 classes).
+2026-07-30 17:39:23 | INFO     | __main__ | Saved Logistic Regression in 0.135 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\category\real\logistic.pkl
+2026-07-30 17:39:23 | INFO     | __main__ | Training Linear SVM for category using real labels (6 classes).
+2026-07-30 17:39:23 | INFO     | __main__ | Saved Linear SVM in 0.173 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\category\real\svm.pkl
+2026-07-30 17:39:23 | INFO     | __main__ | Training Random Forest for category using real labels (6 classes).
+2026-07-30 17:39:25 | INFO     | __main__ | Saved Random Forest in 1.767 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\category\real\random_forest.pkl
+2026-07-30 17:39:25 | INFO     | __main__ | Training XGBoost for category using real labels (6 classes).
+2026-07-30 17:39:36 | INFO     | __main__ | Saved XGBoost in 10.446 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\category\real\xgboost.pkl
+2026-07-30 17:39:36 | INFO     | __main__ | Training Small Neural Network for category using real labels (6 classes).
+2026-07-30 17:39:41 | INFO     | __main__ | Saved Small Neural Network in 4.794 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\category\real\neural_network.pkl
+2026-07-30 17:39:41 | INFO     | __main__ | category/llm label distribution: 6 classes; minimum class count=111; maximum class count=1295.
+2026-07-30 17:39:41 | INFO     | __main__ | Training Logistic Regression for category using llm labels (6 classes).
+2026-07-30 17:39:41 | INFO     | __main__ | Saved Logistic Regression in 0.160 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\category\llm\logistic.pkl
+2026-07-30 17:39:41 | INFO     | __main__ | Training Linear SVM for category using llm labels (6 classes).
+2026-07-30 17:39:41 | INFO     | __main__ | Saved Linear SVM in 0.702 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\category\llm\svm.pkl
+2026-07-30 17:39:41 | INFO     | __main__ | Training Random Forest for category using llm labels (6 classes).
+2026-07-30 17:39:43 | INFO     | __main__ | Saved Random Forest in 1.526 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\category\llm\random_forest.pkl
+2026-07-30 17:39:43 | INFO     | __main__ | Training XGBoost for category using llm labels (6 classes).
+2026-07-30 17:40:00 | INFO     | __main__ | Saved XGBoost in 16.706 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\category\llm\xgboost.pkl
+2026-07-30 17:40:00 | INFO     | __main__ | Training Small Neural Network for category using llm labels (6 classes).
+2026-07-30 17:40:02 | INFO     | __main__ | Saved Small Neural Network in 2.591 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\category\llm\neural_network.pkl
+2026-07-30 17:40:02 | INFO     | __main__ | section/real label distribution: 35 classes; minimum class count=1; maximum class count=851.
+2026-07-30 17:40:02 | INFO     | __main__ | Training Logistic Regression for section using real labels (35 classes).
+2026-07-30 17:40:03 | INFO     | __main__ | Saved Logistic Regression in 0.192 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\section\real\logistic.pkl
+2026-07-30 17:40:03 | INFO     | __main__ | Training Linear SVM for section using real labels (35 classes).
+2026-07-30 17:40:03 | INFO     | __main__ | Saved Linear SVM in 0.868 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\section\real\svm.pkl
+2026-07-30 17:40:03 | INFO     | __main__ | Training Random Forest for section using real labels (35 classes).
+2026-07-30 17:40:08 | INFO     | __main__ | Saved Random Forest in 4.978 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\section\real\random_forest.pkl
+2026-07-30 17:40:08 | INFO     | __main__ | Training XGBoost for section using real labels (35 classes).
+2026-07-30 17:40:43 | INFO     | __main__ | Saved XGBoost in 34.127 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\section\real\xgboost.pkl
+2026-07-30 17:40:43 | INFO     | __main__ | Training Small Neural Network for section using real labels (35 classes).
+2026-07-30 17:40:48 | INFO     | __main__ | Saved Small Neural Network in 4.771 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\section\real\neural_network.pkl
+2026-07-30 17:40:48 | INFO     | __main__ | section/llm label distribution: 30 classes; minimum class count=1; maximum class count=985.
+2026-07-30 17:40:48 | INFO     | __main__ | Training Logistic Regression for section using llm labels (30 classes).
+2026-07-30 17:40:48 | INFO     | __main__ | Saved Logistic Regression in 0.211 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\section\llm\logistic.pkl
+2026-07-30 17:40:48 | INFO     | __main__ | Training Linear SVM for section using llm labels (30 classes).
+2026-07-30 17:40:49 | INFO     | __main__ | Saved Linear SVM in 0.868 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\section\llm\svm.pkl
+2026-07-30 17:40:49 | INFO     | __main__ | Training Random Forest for section using llm labels (30 classes).
+2026-07-30 17:40:53 | INFO     | __main__ | Saved Random Forest in 4.349 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\section\llm\random_forest.pkl
+2026-07-30 17:40:53 | INFO     | __main__ | Training XGBoost for section using llm labels (30 classes).
+2026-07-30 17:41:33 | INFO     | __main__ | Saved XGBoost in 39.823 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\section\llm\xgboost.pkl
+2026-07-30 17:41:33 | INFO     | __main__ | Training Small Neural Network for section using llm labels (30 classes).
+2026-07-30 17:41:39 | INFO     | __main__ | Saved Small Neural Network in 6.390 seconds: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\models\sentence_bert\section\llm\neural_network.pkl
+2026-07-30 17:41:39 | INFO     | __main__ | Sentence-BERT model training completed: 20 models in 136.343 seconds.
+2026-07-30 17:41:41 | INFO     | __main__ | Starting Sentence-BERT model evaluation.
+2026-07-30 17:41:41 | INFO     | __main__ | Loaded test dataset: 816 rows.
+2026-07-30 17:41:41 | INFO     | __main__ | Test embedding metadata is aligned with the test dataset.
+2026-07-30 17:41:41 | INFO     | __main__ | Loaded test embeddings: 816 rows and 384 dimensions.
+2026-07-30 17:41:41 | INFO     | __main__ | Discovered 20 embedding model artifacts.
+2026-07-30 17:41:43 | INFO     | __main__ | Evaluated Logistic Regression for category/llm: accuracy=0.5380, macro_f1=0.3598, weighted_f1=0.6197.
+2026-07-30 17:41:43 | INFO     | __main__ | Evaluated Small Neural Network for category/llm: accuracy=0.6017, macro_f1=0.4268, weighted_f1=0.6627.
+2026-07-30 17:41:44 | INFO     | __main__ | Evaluated Random Forest for category/llm: accuracy=0.7574, macro_f1=0.3566, weighted_f1=0.7791.
+2026-07-30 17:41:45 | INFO     | __main__ | Evaluated Linear SVM for category/llm: accuracy=0.5846, macro_f1=0.3941, weighted_f1=0.6633.
+2026-07-30 17:41:45 | INFO     | __main__ | Evaluated XGBoost for category/llm: accuracy=0.6985, macro_f1=0.4649, weighted_f1=0.7503.
+2026-07-30 17:41:45 | INFO     | __main__ | Evaluated Logistic Regression for category/real: accuracy=0.9142, macro_f1=0.7279, weighted_f1=0.9234.
+2026-07-30 17:41:46 | INFO     | __main__ | Evaluated Small Neural Network for category/real: accuracy=0.9436, macro_f1=0.7622, weighted_f1=0.9420.
+2026-07-30 17:41:46 | INFO     | __main__ | Evaluated Random Forest for category/real: accuracy=0.9069, macro_f1=0.3814, weighted_f1=0.8790.
+2026-07-30 17:41:47 | INFO     | __main__ | Evaluated Linear SVM for category/real: accuracy=0.9400, macro_f1=0.7497, weighted_f1=0.9409.
+2026-07-30 17:41:47 | INFO     | __main__ | Evaluated XGBoost for category/real: accuracy=0.9265, macro_f1=0.5906, weighted_f1=0.9115.
+2026-07-30 17:41:49 | INFO     | __main__ | Evaluated Logistic Regression for section/llm: accuracy=0.4498, macro_f1=0.2160, weighted_f1=0.4957.
+2026-07-30 17:41:51 | INFO     | __main__ | Evaluated Small Neural Network for section/llm: accuracy=0.3272, macro_f1=0.1129, weighted_f1=0.3396.
+2026-07-30 17:41:53 | INFO     | __main__ | Evaluated Random Forest for section/llm: accuracy=0.2083, macro_f1=0.0409, weighted_f1=0.1431.
+2026-07-30 17:41:54 | INFO     | __main__ | Evaluated Linear SVM for section/llm: accuracy=0.3787, macro_f1=0.1697, weighted_f1=0.4088.
+2026-07-30 17:41:56 | INFO     | __main__ | Evaluated XGBoost for section/llm: accuracy=0.3199, macro_f1=0.1042, weighted_f1=0.3137.
+2026-07-30 17:41:58 | INFO     | __main__ | Evaluated Logistic Regression for section/real: accuracy=0.8113, macro_f1=0.3819, weighted_f1=0.8192.
+2026-07-30 17:42:00 | INFO     | __main__ | Evaluated Small Neural Network for section/real: accuracy=0.8370, macro_f1=0.3442, weighted_f1=0.8298.
+2026-07-30 17:42:01 | INFO     | __main__ | Evaluated Random Forest for section/real: accuracy=0.7365, macro_f1=0.1932, weighted_f1=0.6920.
+2026-07-30 17:42:03 | INFO     | __main__ | Evaluated Linear SVM for section/real: accuracy=0.8333, macro_f1=0.3609, weighted_f1=0.8374.
+2026-07-30 17:42:05 | INFO     | __main__ | Evaluated XGBoost for section/real: accuracy=0.8150, macro_f1=0.3196, weighted_f1=0.8010.
+2026-07-30 17:42:05 | INFO     | __main__ | Sentence-BERT model evaluation completed: 20 models in 23.939 seconds.
+2026-07-30 17:42:06 | INFO     | __main__ | Starting representation comparison.
+2026-07-30 17:42:06 | INFO     | __main__ | TF-IDF summary was discovered automatically at: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\tables\section_model_summary.csv
+2026-07-30 17:42:06 | ERROR    | __main__ | Representation comparison failed: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\tables\section_model_summary.csv contains unsupported label sources: real_labels
+2026-07-30 17:47:15 | INFO     | __main__ | Starting representation comparison.
+2026-07-30 17:47:15 | INFO     | __main__ | TF-IDF summary was discovered automatically at: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\tables\section_model_summary.csv
+2026-07-30 17:47:15 | ERROR    | __main__ | Representation comparison failed: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\tables\section_model_summary.csv contains unsupported label sources: real_labels
+2026-07-30 17:47:33 | INFO     | __main__ | Starting representation comparison.
+2026-07-30 17:47:33 | INFO     | __main__ | TF-IDF summary was discovered automatically at: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\tables\section_model_summary.csv
+2026-07-30 17:47:33 | ERROR    | __main__ | Representation comparison failed: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\tables\section_model_summary.csv contains unsupported label sources: real_labels
+2026-07-30 17:49:56 | INFO     | __main__ | Starting representation comparison.
+2026-07-30 17:49:56 | INFO     | __main__ | TF-IDF summary was discovered automatically at: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\tables\section_model_summary.csv
+2026-07-30 17:49:56 | ERROR    | __main__ | Representation comparison failed: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\tables\section_model_summary.csv contains unsupported label sources: real_labels
+2026-07-30 17:50:06 | INFO     | __main__ | Starting representation comparison.
+2026-07-30 17:50:06 | INFO     | __main__ | TF-IDF summary was discovered automatically at: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\tables\section_model_summary.csv
+2026-07-30 17:50:06 | ERROR    | __main__ | Representation comparison failed: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\tables\section_model_summary.csv contains unsupported label sources: real_labels
+2026-07-31 10:36:20 | INFO     | __main__ | Starting representation comparison.
+2026-07-31 10:36:20 | INFO     | __main__ | TF-IDF summary was discovered automatically at: C:\School\2026-Summer\DataMining&KnowledgeDiscovery\CNN_Project\results\tables\section_model_summary.csv
+2026-07-31 10:36:20 | INFO     | __main__ | Loaded 6 TF-IDF and 20 Sentence-BERT evaluation rows.
+2026-07-31 10:36:21 | INFO     | __main__ | Representation comparison complete in 1.20 seconds. Compared 4 matched experiments across 2 shared classifiers.

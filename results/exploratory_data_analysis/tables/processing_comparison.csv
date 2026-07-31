@@ -1,0 +1,3 @@
+Representation,Mean characters,Median characters,90th percentile,Maximum characters
+Baseline,5602.3,3924.5,10640.0,89743
+Enhanced,5590.0,3915.5,10628.5,89722

@@ -1,0 +1,7 @@
+actual_label,business,entertainment,health,news,politics,sport
+business,15,0,1,1,4,0
+entertainment,0,9,1,1,0,1
+health,0,1,5,3,1,0
+news,11,17,44,158,88,4
+politics,0,0,1,1,13,0
+sport,5,18,10,99,13,291

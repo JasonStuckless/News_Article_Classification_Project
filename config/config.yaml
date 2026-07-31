@@ -31,12 +31,83 @@ llm:
   checkpoint_interval: 1
   max_article_characters: 3000
 
+###############################################################################
+# Exploratory Data Analysis
+###############################################################################
+
+eda:
+  enabled: true
+
+  text_columns:
+    - Headline
+    - Description
+    - Article text
+
+  categorical_columns:
+    - Category
+    - Section
+
+  missing_value_threshold: 0.0
+
+###############################################################################
+# TF-IDF
+###############################################################################
+
 tfidf:
   max_features: 20000
   ngram_range: [1, 2]
   stop_words: english
 
+###############################################################################
+# LDA
+###############################################################################
+
+lda:
+  enabled: true
+
+  n_topics: 12
+
+  max_features: 5000
+
+  min_df: 5
+  max_df: 0.95
+
+  learning_method: batch
+  max_iter: 30
+  random_state: 42
+
+###############################################################################
+# Sentence-BERT
+###############################################################################
+
+sentence_bert:
+  enabled: true
+
+  model_name: sentence-transformers/all-MiniLM-L6-v2
+
+  batch_size: 64
+
+  normalize_embeddings: true
+
+  use_gpu: true
+
+###############################################################################
+# Semantic Neighbour Analysis
+###############################################################################
+
+semantic_neighbors:
+  enabled: true
+
+  metric: cosine
+
+  k_neighbors: 5
+
+###############################################################################
+# Classical TF-IDF Classifiers
+###############################################################################
+
 classifiers:
+
   logistic:
     enabled: true
     C: 1.0
@@ -52,6 +123,84 @@ classifiers:
     enabled: true
     alpha: 1.0
 
+###############################################################################
+# Embedding Classifiers
+###############################################################################
+
+embedding_classifiers:
+
+  logistic:
+    enabled: true
+
+    C: 1.0
+    max_iter: 2000
+    solver: lbfgs
+
+  svm:
+    enabled: true
+
+    C: 1.0
+
+  random_forest:
+    enabled: true
+
+    n_estimators: 300
+    max_depth: null
+
+  xgboost:
+    enabled: true
+
+    n_estimators: 300
+    learning_rate: 0.1
+    max_depth: 6
+
+  neural_network:
+    enabled: true
+
+    hidden_layer_sizes:
+      - 256
+      - 128
+
+    activation: relu
+    batch_size: 64
+    max_iter: 50
+    learning_rate_init: 0.001
+
+###############################################################################
+# Evaluation
+###############################################################################
+
+evaluation:
+
+  metrics:
+
+    - accuracy
+    - balanced_accuracy
+
+    - macro_precision
+    - macro_recall
+    - macro_f1
+
+    - weighted_precision
+    - weighted_recall
+    - weighted_f1
+
+###############################################################################
+# Output Directories
+###############################################################################
+
 output:
+
   models: models/
+
   results: results/
+
+  figures: results/figures/
+
+  tables: results/tables/
+
+  sentence_bert: results/sentence_bert/
+
+  representation_comparison: results/representation_comparison/
+
+  logs: logs/

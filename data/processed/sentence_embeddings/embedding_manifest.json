@@ -1,0 +1,32 @@
+{
+  "batch_size": 64,
+  "device": null,
+  "embedding_dimension": 384,
+  "embedding_dtype": "float32",
+  "full_rows": 4076,
+  "full_text_sha256": "b6cde29d59de002490dc5577b6f7e88cc8d82d1ccfb4c75698e98778b13d421c",
+  "generated_at_utc": "2026-07-30T21:34:56.313010+00:00",
+  "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+  "normalize_embeddings": true,
+  "output_files": {
+    "full_embeddings": "data\\processed\\sentence_embeddings\\full_embeddings.npy",
+    "full_metadata": "data\\processed\\sentence_embeddings\\full_metadata.csv",
+    "test_embeddings": "data\\processed\\sentence_embeddings\\test_embeddings.npy",
+    "test_metadata": "data\\processed\\sentence_embeddings\\test_metadata.csv",
+    "train_embeddings": "data\\processed\\sentence_embeddings\\train_embeddings.npy",
+    "train_metadata": "data\\processed\\sentence_embeddings\\train_metadata.csv"
+  },
+  "overwrite": false,
+  "resolved_device": "cpu",
+  "show_progress_bar": true,
+  "test_rows": 816,
+  "test_text_sha256": "a0c99825c19946eb91733155fa481ddd41efabab1bba7590159b31db4b6683c9",
+  "text_fields": [
+    "Headline",
+    "Description",
+    "Article text"
+  ],
+  "text_preprocessing": "notebook_enhanced_text",
+  "train_rows": 3260,
+  "train_text_sha256": "a6a27a8ffef2ba3185b5fba6d37344741b080e2499f467806df244d67548d9c4"
+}

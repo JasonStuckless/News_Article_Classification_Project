@@ -1,0 +1,5 @@
+Label target,Metric,Value
+Category,Normalized Mutual Information,0.11655977136417216
+Category,Adjusted Rand Index,0.054544933782964926
+Section,Normalized Mutual Information,0.20192383087703508
+Section,Adjusted Rand Index,0.10083198326591584

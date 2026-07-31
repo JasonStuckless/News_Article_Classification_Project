@@ -1,0 +1,7 @@
+Category,Articles,Median_headline_words,Median_description_words,Median_article_words,Mean_article_words
+sport,2176,14.0,27.0,528.5,709.0
+news,1611,12.0,29.0,729.0,1061.0
+business,104,12.0,28.5,821.0,970.5
+politics,75,12.0,33.0,1002.0,1544.6
+entertainment,58,14.0,34.0,534.5,554.0
+health,52,12.0,28.5,2537.0,2842.5
